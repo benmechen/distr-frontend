@@ -1,0 +1,16 @@
+overwrite: true
+schema: 'http://localhost:4000/graphql'
+documents: 'src/**/*.graphql'
+generates:
+    src/generated/graphql.tsx:
+        plugins:
+            - 'typescript'
+            - 'typescript-operations'
+            - 'typescript-urql'
+        config:
+            skipTypename: false
+            withHooks: true
+            withHOC: false
+            withComponent: false
+            withMutationFn: true
+            urqlImportFrom: 'src/generated/graphql.tsx'
