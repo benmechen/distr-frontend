@@ -11,9 +11,14 @@
         "format": "prettier \"**/*.{ts,tsx}\" --write"
     },
     "dependencies": {
+        "@urql/exchange-auth": "^0.1.7",
         "graphql": "^15.5.0",
         "react": "^17.0.2",
         "react-dom": "^17.0.2",
+        "react-hook-form": "^7.27.1",
+        "react-loader-spinner": "^5.1.4",
+        "react-router-dom": "^6.2.1",
+        "rxjs": "^7.5.4",
         "urql": "^2.0.2"
     },
     "devDependencies": {
@@ -21,11 +26,12 @@
         "@graphql-codegen/typescript": "^1.22.0",
         "@graphql-codegen/typescript-operations": "^1.17.16",
         "@graphql-codegen/typescript-resolvers": "^1.19.1",
-        "@graphql-codegen/typescript-urql": "^2.0.6",
-        "@typescript-eslint/eslint-plugin": "^5.12.0",
-        "@typescript-eslint/parser": "^5.12.0",
+        "@graphql-codegen/typescript-urql": "^2.0.11",
         "@types/react": "^17.0.33",
         "@types/react-dom": "^17.0.10",
+        "@types/tailwindcss": "^3.0.8",
+        "@typescript-eslint/eslint-plugin": "^5.12.0",
+        "@typescript-eslint/parser": "^5.12.0",
         "@vitejs/plugin-react": "^1.0.7",
         "autoprefixer": "^10.4.2",
         "eslint": "^7.32.0",
@@ -36,8 +42,8 @@
         "eslint-plugin-react": "^7.28.0",
         "husky": "^6.0.0",
         "lint-staged": "^10.5.4",
-        "prettier": "^2.2.1",
         "postcss": "^8.4.6",
+        "prettier": "^2.2.1",
         "tailwindcss": "^3.0.23",
         "typescript": "^4.5.4",
         "vite": "^2.8.0"

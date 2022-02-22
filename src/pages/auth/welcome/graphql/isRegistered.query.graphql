@@ -1,0 +1,6 @@
+query IsRegistered($email: String!) {
+    userRegistered(email: $email) {
+        exists
+        name
+    }
+}
