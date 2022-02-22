@@ -7,7 +7,9 @@ const Input = React.forwardRef<HTMLInputElement, IInput>(
         <input
             {...props}
             ref={ref}
-            className={`rounded-lg bg-gray-100 outline-none py-3 px-6 w-full ${className}`}
+            className={`rounded-lg bg-gray-100 outline-none py-3 px-6 w-full ${
+                props.disabled && "opacity-60"
+            } ${className}`}
         />
     )
 )

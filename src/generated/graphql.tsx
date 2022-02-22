@@ -467,7 +467,7 @@ export type Query = {
   systems: SystemConnection;
   /** Get a single user */
   user?: Maybe<User>;
-  userRegistered: Scalars['Boolean'];
+  userRegistered: UserExistsResponse;
   /** Get a paginated list of user objects */
   users: UserConnection;
   /** Get mutliple users */
@@ -766,6 +766,12 @@ export type UserEdge = {
   node: User;
 };
 
+export type UserExistsResponse = {
+  __typename?: 'UserExistsResponse';
+  exists: Scalars['Boolean'];
+  name?: Maybe<Scalars['String']>;
+};
+
 /** Permissions the user has */
 export enum UserRole {
   Admin = 'ADMIN',
@@ -803,6 +809,20 @@ export type ValueInput = {
   structValue?: Maybe<StructInput>;
 };
 
+export type LoginMutationVariables = Exact<{
+  email: Scalars['String'];
+  password: Scalars['String'];
+}>;
+
+
+export type LoginMutation = (
+  { __typename?: 'Mutation' }
+  & { login?: Maybe<(
+    { __typename?: 'Tokens' }
+    & Pick<Tokens, 'accessToken' | 'refreshToken'>
+  )> }
+);
+
 export type IsRegisteredQueryVariables = Exact<{
   email: Scalars['String'];
 }>;
@@ -810,16 +830,59 @@ export type IsRegisteredQueryVariables = Exact<{
 
 export type IsRegisteredQuery = (
   { __typename?: 'Query' }
-  & Pick<Query, 'userRegistered'>
+  & { userRegistered: (
+    { __typename?: 'UserExistsResponse' }
+    & Pick<UserExistsResponse, 'exists' | 'name'>
+  ) }
+);
+
+export type RefreshMutationVariables = Exact<{
+  token: Scalars['String'];
+}>;
+
+
+export type RefreshMutation = (
+  { __typename?: 'Mutation' }
+  & { refresh?: Maybe<(
+    { __typename?: 'Tokens' }
+    & Pick<Tokens, 'accessToken' | 'refreshToken'>
+  )> }
 );
 
 
+export const LoginDocument = gql`
+    mutation Login($email: String!, $password: String!) {
+  login(email: $email, password: $password) {
+    accessToken
+    refreshToken
+  }
+}
+    `;
+
+export function useLoginMutation() {
+  return Urql.useMutation<LoginMutation, LoginMutationVariables>(LoginDocument);
+};
 export const IsRegisteredDocument = gql`
     query IsRegistered($email: String!) {
-  userRegistered(email: $email)
+  userRegistered(email: $email) {
+    exists
+    name
+  }
 }
     `;
 
 export function useIsRegisteredQuery(options: Omit<Urql.UseQueryArgs<IsRegisteredQueryVariables>, 'query'> = {}) {
   return Urql.useQuery<IsRegisteredQuery>({ query: IsRegisteredDocument, ...options });
+};
+export const RefreshDocument = gql`
+    mutation refresh($token: String!) {
+  refresh(token: $token) {
+    accessToken
+    refreshToken
+  }
+}
+    `;
+
+export function useRefreshMutation() {
+  return Urql.useMutation<RefreshMutation, RefreshMutationVariables>(RefreshDocument);
 };

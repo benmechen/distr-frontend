@@ -17,7 +17,10 @@ const WelcomeForm = ({ onSubmit }: IWelcomeForm) => {
             onSubmit={handleSubmit(onSubmit)}
             className="flex flex-col gap-4 w-80"
         >
-            <Input placeholder="Email" {...register("email")} />
+            <Input
+                placeholder="Email"
+                {...register("email", { required: true })}
+            />
             <Button type="submit">Continue</Button>
         </form>
     )

@@ -11,12 +11,14 @@
         "format": "prettier \"**/*.{ts,tsx}\" --write"
     },
     "dependencies": {
+        "@urql/exchange-auth": "^0.1.7",
         "graphql": "^15.5.0",
         "react": "^17.0.2",
         "react-dom": "^17.0.2",
         "react-hook-form": "^7.27.1",
         "react-loader-spinner": "^5.1.4",
         "react-router-dom": "^6.2.1",
+        "rxjs": "^7.5.4",
         "urql": "^2.0.2"
     },
     "devDependencies": {

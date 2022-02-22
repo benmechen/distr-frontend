@@ -3,10 +3,7 @@ import { SubmitHandler } from "react-hook-form"
 import { useNavigate } from "react-router-dom"
 import { Emphasis } from "../../../components/Emphasis"
 import { LoadingWrapper } from "../../../components/LoadingWrapper"
-import {
-    IsRegisteredQueryVariables,
-    useIsRegisteredQuery
-} from "../../../generated/graphql"
+import { useIsRegisteredQuery } from "../../../generated/graphql"
 import { useLazyQuery } from "../../../utils/useLazyQuery"
 import { WelcomeForm } from "./components/WelcomeForm"
 import { IWelcomeFormData } from "./components/WelcomeForm/WelcomeForm"
@@ -16,19 +13,28 @@ const WelcomeScreen = () => {
     const [{ data, fetching, error }, checkRegistered] = useLazyQuery(
         useIsRegisteredQuery
     )
+    const [email, setEmail] = useState<string>()
 
     useEffect(() => {
         if (error) return console.error(error)
         if (data) {
-            if (data.userRegistered) navigate("/login")
-            else navigate("/register")
+            if (data.userRegistered.exists)
+                navigate("/auth/login", {
+                    state: {
+                        name: data.userRegistered.name,
+                        email
+                    }
+                })
+            else navigate("/auth/register")
         }
     }, [data, error])
 
-    const handleSubmit: SubmitHandler<IWelcomeFormData> = (data) =>
+    const handleSubmit: SubmitHandler<IWelcomeFormData> = (data) => {
+        setEmail(data.email)
         checkRegistered({
             email: data.email
         })
+    }
 
     return (
         <div className="flex flex-col items-center justify-center h-screen">
