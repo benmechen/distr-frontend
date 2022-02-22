@@ -19,10 +19,9 @@ function App() {
 
     useMemo(
         () =>
-            client.state.subscribe((state) => {
-                console.log("State:", state)
+            client.state.subscribe((state) =>
                 setLoggedIn(state === AuthState.AUTHENTICATED)
-            }),
+            ),
         [client]
     )
 
