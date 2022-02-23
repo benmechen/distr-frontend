@@ -1,3 +1,4 @@
+import { Modal, useModal } from '../../../components/Modal';
 import { CreateSystemCard } from './components/CreateSystemCard';
 import { SystemCard } from './components/SystemCard';
 import { ISystemCard } from './components/SystemCard/SystemCard';
@@ -66,12 +67,14 @@ const DashboardScreen = () => {
 	];
 
 	return (
-		<div className="flex flex-wrap items-center justify-center h-screen gap-4">
-			<CreateSystemCard />
-			{systems.map((system) => (
-				<SystemCard {...system} />
-			))}
-		</div>
+		<>
+			<div className="flex flex-wrap items-center justify-center h-screen gap-4">
+				<CreateSystemCard />
+				{systems.map((system) => (
+					<SystemCard {...system} />
+				))}
+			</div>
+		</>
 	);
 };
 export default DashboardScreen;
