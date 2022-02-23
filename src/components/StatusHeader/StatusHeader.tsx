@@ -1,22 +1,20 @@
-import {
-	Status as StatusIndicator,
-	SystemStatus,
-} from '../../../../../../../components/Status';
+import { Status } from '../../generated/graphql';
+import { StatusIndicator } from '../StatusIndicator';
 
 interface IStatus {
 	healthy: number;
 	unhealthy: number;
 }
 
-const Status = ({ healthy, unhealthy }: IStatus) => (
+const StatusHeader = ({ healthy, unhealthy }: IStatus) => (
 	<div className="flex items-center py-2">
 		<StatusIndicator
 			status={
 				unhealthy === 0
-					? SystemStatus.HEALTHY
+					? Status.Healthy
 					: healthy === 0
-					? SystemStatus.OUTAGE
-					: SystemStatus.DEGRADED
+					? Status.Down
+					: Status.Degraded
 			}
 		/>
 		<span className="text-xs ml-2 font-light">
@@ -24,4 +22,4 @@ const Status = ({ healthy, unhealthy }: IStatus) => (
 		</span>
 	</div>
 );
-export default Status;
+export default StatusHeader;
