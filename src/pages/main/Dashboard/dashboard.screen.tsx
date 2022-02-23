@@ -1,4 +1,3 @@
-import { Modal, useModal } from '../../../components/Modal';
 import { CreateSystemCard } from './components/CreateSystemCard';
 import { SystemCard } from './components/SystemCard';
 import { ISystemCard } from './components/SystemCard/SystemCard';
@@ -6,6 +5,7 @@ import { ISystemCard } from './components/SystemCard/SystemCard';
 const DashboardScreen = () => {
 	const systems: ISystemCard[] = [
 		{
+			id: '1',
 			name: 'Uplevyl',
 			status: {
 				healthy: 0,
@@ -31,6 +31,7 @@ const DashboardScreen = () => {
 			],
 		},
 		{
+			id: '2',
 			name: 'Limelight',
 			status: {
 				healthy: 2,
@@ -44,23 +45,6 @@ const DashboardScreen = () => {
 				{
 					id: '1234',
 					name: 'Test',
-				},
-			],
-		},
-		{
-			name: 'Hiver',
-			status: {
-				healthy: 1,
-				unhealthy: 1,
-			},
-			deployments: [
-				{
-					id: '1234',
-					name: 'Dev',
-				},
-				{
-					id: '1234',
-					name: 'Staging',
 				},
 			],
 		},

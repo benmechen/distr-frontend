@@ -1,11 +1,13 @@
+import { useNavigate } from 'react-router-dom';
 import { useModal } from '../../../../../components/Modal';
 import { OptionsButton } from '../../../../../components/OptionsButton';
 import { Card } from '../Card';
 import { Deployment } from './components/Deployment';
-import { Status } from './components/Status';
+import { StatusHeader } from '../../../../../components/StatusHeader';
 import { UpdateSystemForm } from './components/UpdateSystemForm';
 
 export interface ISystemCard {
+	id: string;
 	name: string;
 	status: {
 		healthy: number;
@@ -17,17 +19,20 @@ export interface ISystemCard {
 	}[];
 }
 
-const SystemCard = ({ name, status, deployments }: ISystemCard) => {
+const SystemCard = ({ id, name, status, deployments }: ISystemCard) => {
+	const navigate = useNavigate();
 	const [Modal, { open }] = useModal();
+
+	const goToSystem = () => navigate(`/system/${id}?name=${name}`);
 
 	return (
 		<>
 			<Modal title={name}>
 				<UpdateSystemForm name={name} onSubmit={() => {}} />
 			</Modal>
-			<Card>
+			<Card onClick={goToSystem}>
 				<div className="flex w-full justify-between items-start">
-					<Status {...status} />
+					<StatusHeader {...status} />
 					<OptionsButton onClick={open} />
 				</div>
 				<h2 className="text-3xl font-light">{name}</h2>
