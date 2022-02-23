@@ -1,4 +1,5 @@
 import { Status } from '../../../generated/graphql';
+import { CreateDeploymentButton } from './components/CreateDeploymentButton';
 import { Deployment, IDeployment } from './components/Deployment';
 
 const SystemScreen = () => {
@@ -133,6 +134,7 @@ const SystemScreen = () => {
 
 	return (
 		<div className="w-screen h-screen p-14 pb-28 pt-40 flex items-center justify-center gap-14">
+			<CreateDeploymentButton />
 			{deployments.map((deployment) => (
 				<Deployment {...deployment} />
 			))}
