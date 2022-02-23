@@ -1,13 +1,21 @@
-import { Plus } from "phosphor-react"
-import { useState } from "react"
-import { Card } from "../Card"
+import { Plus } from 'phosphor-react';
+import { useModal } from '../../../../../components/Modal';
+import { Card } from '../Card';
+import { CreateSystemForm } from './components/CreateSystemForm';
 
 const CreateSystemCard = () => {
-    return (
-        <Card>
-            <Plus size={50} />
-        </Card>
-    )
-}
+	const [Modal, { open }] = useModal();
 
-export default CreateSystemCard
+	return (
+		<>
+			<Modal title="Create System">
+				<CreateSystemForm onSubmit={() => {}} />
+			</Modal>
+			<Card onClick={open}>
+				<Plus size={50} />
+			</Card>
+		</>
+	);
+};
+
+export default CreateSystemCard;
