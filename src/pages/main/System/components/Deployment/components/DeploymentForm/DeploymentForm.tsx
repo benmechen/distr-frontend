@@ -11,7 +11,7 @@ enum Platform {
 	OTHER,
 }
 
-interface ICreateDeploymentFormData {
+interface IDeploymentFormData {
 	name: string;
 	aws_id?: string;
 	aws_secret?: string;
@@ -21,12 +21,18 @@ interface ICreateDeploymentFormData {
 	azure_secret?: string;
 }
 
-interface ICreateDeploymentForm {
-	onSubmit: SubmitHandler<ICreateDeploymentFormData>;
+interface IDeploymentForm {
+	type: 'create' | 'update';
+	name?: string;
+	onSubmit: SubmitHandler<IDeploymentFormData>;
 }
-const CreateDeploymentForm = ({ onSubmit }: ICreateDeploymentForm) => {
+const DeploymentForm = ({ type, name, onSubmit }: IDeploymentForm) => {
 	const [platform, setPlatform] = useState<Platform>(Platform.AWS);
-	const { handleSubmit, register } = useForm<ICreateDeploymentFormData>();
+	const { handleSubmit, register } = useForm<IDeploymentFormData>({
+		defaultValues: {
+			name,
+		},
+	});
 
 	return (
 		<form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
@@ -100,9 +106,13 @@ const CreateDeploymentForm = ({ onSubmit }: ICreateDeploymentForm) => {
 					/>
 				</>
 			)}
-			<Button>Create Deployment</Button>
+			{type === 'create' ? (
+				<Button>Create Deployment</Button>
+			) : (
+				<Button>Save Changes</Button>
+			)}
 		</form>
 	);
 };
 
-export default CreateDeploymentForm;
+export default DeploymentForm;

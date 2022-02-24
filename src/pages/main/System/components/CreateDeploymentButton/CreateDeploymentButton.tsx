@@ -1,6 +1,6 @@
 import { Plus } from 'phosphor-react';
 import { useModal } from '../../../../../components/Modal';
-import { CreateDeploymentForm } from './components/CreateDeploymentForm';
+import { DeploymentForm } from '../Deployment/components/DeploymentForm';
 
 const CreateDeploymentButton = () => {
 	const [Modal, { open }] = useModal();
@@ -8,7 +8,7 @@ const CreateDeploymentButton = () => {
 	return (
 		<>
 			<Modal title="Create Deployment">
-				<CreateDeploymentForm onSubmit={() => {}} />
+				<DeploymentForm type="create" onSubmit={() => {}} />
 			</Modal>
 			<button
 				className="rounded-l-full w-20 h-20 bg-gradient-to-r from-cyan-500 to-blue-500 fixed p-5 flex transition-transform duration-150 hover:-translate-x-1"
