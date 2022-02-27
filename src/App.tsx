@@ -12,6 +12,7 @@ import { Layout } from './pages/main/Layout';
 import DashboardScreen from './pages/main/Dashboard/dashboard.screen';
 import { AuthState, ClientService } from './utils/client.service';
 import SystemScreen from './pages/main/System/system.screen';
+import CreateResourceScreen from './pages/main/System/CreateResource/create-resource.screen';
 
 function App() {
 	const client = useMemo(
@@ -59,6 +60,10 @@ function App() {
 								<Route
 									path="system/:id"
 									element={<SystemScreen />}
+								/>
+								<Route
+									path="system/:id/resource/new"
+									element={<CreateResourceScreen />}
 								/>
 								<Route index element={<DashboardScreen />} />
 							</Route>

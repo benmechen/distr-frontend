@@ -4,11 +4,11 @@ import { Button } from '../../../../../../../components/Button';
 import { Input } from '../../../../../../../components/Input';
 import { Platform as PlatformSelector } from './components/Platform';
 
-enum Platform {
-	AWS,
-	AZURE,
-	GCP,
-	OTHER,
+export enum Platform {
+	AWS = 'AWS',
+	AZURE = 'Azure',
+	GCP = 'GCP',
+	OTHER = 'Other',
 }
 
 interface IDeploymentFormData {

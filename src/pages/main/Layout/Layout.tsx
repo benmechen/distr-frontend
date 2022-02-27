@@ -36,6 +36,7 @@ const getTitle = (
 	location: Location,
 	searchParams: URLSearchParams,
 ): [string, string] => {
+	if (location.pathname.includes('resource/new')) return ['New', 'Resource'];
 	if (location.pathname.includes('/system/'))
 		return [searchParams.get('name') ?? '', 'deployments'];
 	return ['Your', 'systems'];
@@ -43,6 +44,7 @@ const getTitle = (
 
 const getBack = (location: Location, navigate: NavigateFunction) => {
 	if (location.pathname.includes('/system/')) return () => navigate('/');
+	if (location.pathname.includes('/resource/new')) return () => navigate(-1);
 	return null;
 };
 
