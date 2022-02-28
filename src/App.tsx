@@ -52,9 +52,7 @@ function App() {
 							<Route
 								path="/"
 								element={
-									<ProtectedRoute isLoggedIn={isLoggedIn}>
-										<Layout />
-									</ProtectedRoute>
+									<ProtectedRoute isLoggedIn={isLoggedIn} />
 								}
 							>
 								<Route

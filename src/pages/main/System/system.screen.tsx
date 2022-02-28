@@ -1,8 +1,12 @@
+import { useNavigate } from 'react-router-dom';
 import { Status } from '../../../generated/graphql';
+import { toTitleCase } from '../../../utils/helper.service';
+import { Layout } from '../Layout';
 import { CreateDeploymentButton } from './components/CreateDeploymentButton';
 import { Deployment, IDeployment } from './components/Deployment';
 
 const SystemScreen = () => {
+	const navigate = useNavigate();
 	const deployments: IDeployment[] = [
 		{
 			name: 'Staging',
@@ -131,14 +135,26 @@ const SystemScreen = () => {
 			],
 		},
 	];
+	const system = {
+		name: 'Uplevyl',
+		deployments,
+	};
 
 	return (
-		<div className="w-screen h-screen p-14 pb-28 pt-40 flex items-center justify-center gap-14">
-			<CreateDeploymentButton />
-			{deployments.map((deployment) => (
-				<Deployment {...deployment} />
-			))}
-		</div>
+		<Layout
+			title={{
+				main: toTitleCase(system.name),
+				emphasis: 'Deployments',
+			}}
+			onBack={() => navigate('/')}
+		>
+			<div className="w-screen h-screen p-14 pb-28 pt-40 flex items-center justify-center gap-14">
+				<CreateDeploymentButton />
+				{system.deployments.map((deployment) => (
+					<Deployment {...deployment} />
+				))}
+			</div>
+		</Layout>
 	);
 };
 export default SystemScreen;
