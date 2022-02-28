@@ -1,10 +1,15 @@
 interface IEmphasis {
-    children: string
+	children: string;
+	bold?: boolean;
 }
 
-const Emphasis = ({ children }: IEmphasis) => (
-    <span className="font-bold text-transparent bg-clip-text bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500">
-        {children}
-    </span>
-)
-export default Emphasis
+const Emphasis = ({ bold = true, children }: IEmphasis) => (
+	<span
+		className={`${
+			bold && 'font-bold'
+		} text-transparent bg-clip-text bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500`}
+	>
+		{children}
+	</span>
+);
+export default Emphasis;

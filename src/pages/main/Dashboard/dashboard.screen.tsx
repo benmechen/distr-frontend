@@ -1,3 +1,4 @@
+import { Layout } from '../Layout';
 import { CreateSystemCard } from './components/CreateSystemCard';
 import { SystemCard } from './components/SystemCard';
 import { ISystemCard } from './components/SystemCard/SystemCard';
@@ -51,14 +52,19 @@ const DashboardScreen = () => {
 	];
 
 	return (
-		<>
+		<Layout
+			title={{
+				main: 'Your',
+				emphasis: 'Systems',
+			}}
+		>
 			<div className="flex flex-wrap items-center justify-center h-screen gap-4">
 				<CreateSystemCard />
 				{systems.map((system) => (
 					<SystemCard {...system} />
 				))}
 			</div>
-		</>
+		</Layout>
 	);
 };
 export default DashboardScreen;

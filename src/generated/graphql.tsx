@@ -197,6 +197,23 @@ export type DeploymentUpdateInput = {
   name?: Maybe<Scalars['String']>;
 };
 
+export type Field = {
+  __typename?: 'Field';
+  description?: Maybe<Scalars['String']>;
+  fields?: Maybe<Array<Field>>;
+  name: Scalars['String'];
+  required: Scalars['Boolean'];
+  type: FieldType;
+};
+
+export enum FieldType {
+  Boolean = 'BOOLEAN',
+  Number = 'NUMBER',
+  String = 'STRING',
+  Struct = 'STRUCT',
+  Unrecognized = 'UNRECOGNIZED'
+}
+
 export type Input = {
   /** Field name */
   name: Scalars['String'];
@@ -463,6 +480,7 @@ export type Query = {
   /** Get the currently logged in user */
   me: User;
   resource: Resource;
+  service: Service;
   system: System;
   systems: SystemConnection;
   /** Get a single user */
@@ -499,6 +517,11 @@ export type QueryDeploymentArgs = {
 
 
 export type QueryResourceArgs = {
+  id: Scalars['ID'];
+};
+
+
+export type QueryServiceArgs = {
   id: Scalars['ID'];
 };
 
@@ -587,6 +610,7 @@ export type Service = {
   description: Scalars['String'];
   /** Globally unique identifier */
   id: Scalars['ID'];
+  inputs: Array<Field>;
   /** Location at which the service's proto specification can be requested */
   introspectionURL: Scalars['String'];
   /** Service name */
