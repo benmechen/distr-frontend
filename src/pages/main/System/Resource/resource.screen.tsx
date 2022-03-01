@@ -88,7 +88,7 @@ const ResourceScreen = () => {
 					</div>
 				</div>
 				<ServiceSideBar id="1234" />
-			</div>{' '}
+			</div>
 		</Layout>
 	);
 };
