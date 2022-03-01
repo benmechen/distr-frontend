@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { Button } from '../../../../../../../components/Button';
 import { Input } from '../../../../../../../components/Input';
-import { Platform as PlatformSelector } from './components/Platform';
+import { Platform as PlatformSelector } from '../../../../../../../components/Platform';
 
 export enum Platform {
 	AWS = 'AWS',

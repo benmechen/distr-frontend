@@ -1,5 +1,6 @@
 import { Emphasis } from '../../../components/Emphasis';
 import { Back } from './components/Back';
+import { Marketplace } from './components/Marketplace';
 import { Settings } from './components/Settings';
 
 interface ILayout {
@@ -18,9 +19,12 @@ const Layout = ({ title, onBack, children }: ILayout) => (
 				{title.main}{' '}
 				{title.emphasis && <Emphasis>{title.emphasis}</Emphasis>}
 			</span>
-			<Settings />
+			<div>
+				<Marketplace className="mr-4" />
+				<Settings />
+			</div>
 		</nav>
-		{children}
+		<div className="pt-16">{children}</div>
 	</main>
 );
 export default Layout;

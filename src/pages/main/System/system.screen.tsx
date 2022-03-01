@@ -148,7 +148,7 @@ const SystemScreen = () => {
 			}}
 			onBack={() => navigate('/')}
 		>
-			<div className="w-screen h-screen p-14 pb-28 pt-40 flex items-center justify-center gap-14">
+			<div className="w-screen h-screen p-14 pb-44 pt-28 flex items-center justify-center gap-14">
 				<CreateDeploymentButton />
 				{system.deployments.map((deployment) => (
 					<Deployment {...deployment} />

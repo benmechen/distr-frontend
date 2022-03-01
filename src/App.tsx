@@ -5,14 +5,14 @@ import { IconContext } from 'phosphor-react';
 import { indigo } from 'tailwindcss/colors';
 import { AuthRoute } from './components/AuthRoute';
 import { ProtectedRoute } from './components/ProtectedRoute';
+import { AuthState, ClientService } from './utils/client.service';
 import MainProvider from './main.provider';
 import LoginScreen from './pages/auth/login/login.screen';
 import WelcomeScreen from './pages/auth/welcome/welcome.screen';
-import { Layout } from './pages/main/Layout';
 import DashboardScreen from './pages/main/Dashboard/dashboard.screen';
-import { AuthState, ClientService } from './utils/client.service';
 import SystemScreen from './pages/main/System/system.screen';
 import CreateResourceScreen from './pages/main/System/CreateResource/create-resource.screen';
+import MarketplaceScreen from './pages/main/Marketplace/marketplace.screen';
 
 function App() {
 	const client = useMemo(
@@ -62,6 +62,10 @@ function App() {
 								<Route
 									path="system/:id/resource/new"
 									element={<CreateResourceScreen />}
+								/>
+								<Route
+									path="marketplace"
+									element={<MarketplaceScreen />}
 								/>
 								<Route index element={<DashboardScreen />} />
 							</Route>
