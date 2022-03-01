@@ -199,6 +199,7 @@ export type DeploymentUpdateInput = {
 
 export type Field = {
   __typename?: 'Field';
+  defaultValue?: Maybe<Value>;
   description?: Maybe<Scalars['String']>;
   fields?: Maybe<Array<Field>>;
   name: Scalars['String'];

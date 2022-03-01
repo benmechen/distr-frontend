@@ -17,6 +17,7 @@ const Field = ({
 	description,
 	fields,
 	className,
+	defaultValue,
 	...props
 }: IField & UseFormRegisterReturn) => {
 	const field = (type: FieldType) => {
@@ -26,6 +27,7 @@ const Field = ({
 					<Checkbox
 						label={toTitleCase(name)}
 						required={required}
+						defaultChecked={defaultValue?.boolValue ?? undefined}
 						{...props}
 					/>
 				);
@@ -35,6 +37,7 @@ const Field = ({
 						placeholder={toTitleCase(name)}
 						type="number"
 						required={required}
+						defaultValue={defaultValue?.numberValue ?? undefined}
 						{...props}
 					/>
 				);
@@ -43,6 +46,11 @@ const Field = ({
 					<textarea
 						placeholder={toTitleCase(name)}
 						required={required}
+						defaultValue={
+							JSON.stringify(defaultValue?.structValue?.fields) ??
+							defaultValue?.stringValue ??
+							undefined
+						}
 						{...props}
 					></textarea>
 				);
@@ -52,6 +60,7 @@ const Field = ({
 						placeholder={toTitleCase(name)}
 						type="text"
 						required={required}
+						defaultValue={defaultValue?.stringValue ?? undefined}
 						{...props}
 					/>
 				);
