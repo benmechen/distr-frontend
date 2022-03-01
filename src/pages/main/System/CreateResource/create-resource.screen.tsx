@@ -21,7 +21,7 @@ const CreateResourceScreen = () => {
 			}}
 			onBack={() => navigate(-1)}
 		>
-			<div className="pt-20 max-h-screen overflow-hidden items-center">
+			<div className="pt-4 max-h-screen overflow-hidden items-center">
 				<PageIndicator page={page} />
 				{page === 0 && <SelectServiceScreen next={onPage1} />}
 				{page === 1 && <ServiceDetailsScreen next={onPage2} />}
