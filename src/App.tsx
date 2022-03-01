@@ -13,6 +13,7 @@ import DashboardScreen from './pages/main/Dashboard/dashboard.screen';
 import SystemScreen from './pages/main/System/system.screen';
 import CreateResourceScreen from './pages/main/System/CreateResource/create-resource.screen';
 import MarketplaceScreen from './pages/main/Marketplace/marketplace.screen';
+import ResourceScreen from './pages/main/System/Resource/resource.screen';
 
 function App() {
 	const client = useMemo(
@@ -62,6 +63,10 @@ function App() {
 								<Route
 									path="system/:id/resource/new"
 									element={<CreateResourceScreen />}
+								/>
+								<Route
+									path="system/:systemId/resource/:id"
+									element={<ResourceScreen />}
 								/>
 								<Route
 									path="marketplace"

@@ -1,16 +1,12 @@
 import { useForm } from 'react-hook-form';
 import { Button } from '../../../../../components/Button';
 import { Input } from '../../../../../components/Input';
-import { StatusIndicator } from '../../../../../components/StatusIndicator';
+import { ResourceDetails } from '../../../../../components/ResourceDetails';
 import {
 	Property as PropertyType,
 	Status,
 } from '../../../../../generated/graphql';
-import {
-	IUsage,
-	Usage,
-} from '../../components/Deployment/components/Resource/components/Usage';
-import { Property } from '../components/Property';
+import { IUsage } from '../../components/Deployment/components/Resource/components/Usage';
 import { ServiceSideBar } from '../components/ServiceSideBar';
 
 interface IResourceDetailsScreen {
@@ -86,26 +82,7 @@ const ResourceDetailsScreen = ({ next }: IResourceDetailsScreen) => {
 						</Button>
 					</form>
 					<hr className="my-8" />
-					<h4 className="text-lg font-semibold mb-4">Details</h4>
-					<p className="font-medium">
-						Status: <StatusIndicator status={resource.status} />
-						<span className="text-lime-500 uppercase font-light ml-1">
-							{resource.status}
-						</span>
-					</p>
-					<p className="font-medium mb-2">
-						Usage:{' '}
-						<span className="font-light">
-							{resource.usage.type === 'limited'
-								? `${resource.usage.current} / ${resource.usage.limit}`
-								: 'Unlimited'}
-						</span>
-					</p>
-					<Usage {...resource.usage} />
-					<br />
-					{resource.details.map((property) => (
-						<Property {...property} />
-					))}
+					<ResourceDetails {...resource} />
 				</div>
 			</div>
 			<ServiceSideBar id="1234" />
