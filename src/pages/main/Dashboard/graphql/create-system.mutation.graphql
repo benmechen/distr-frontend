@@ -1,0 +1,5 @@
+mutation CreateSystem($input: SystemCreateInput!) {
+	systemCreate(input: $input) {
+		...SystemRow
+	}
+}

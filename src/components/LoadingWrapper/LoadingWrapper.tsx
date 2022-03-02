@@ -1,14 +1,18 @@
-import React from "react"
-import { Loading } from "../Loading"
+import React from 'react';
+import { Loading } from '../Loading';
 
 interface ILoadingWrapper {
-    loading: boolean
-    children: React.ReactNode
+	loading: boolean;
+	children: React.ReactNode;
 }
 
 const LoadingWrapper = ({ loading, children }: ILoadingWrapper) => {
-    if (!loading) return <>{children}</>
+	if (!loading) return <>{children}</>;
 
-    return <Loading />
-}
-export default LoadingWrapper
+	return (
+		<div className="w-full h-full flex items-center justify-center">
+			<Loading />
+		</div>
+	);
+};
+export default LoadingWrapper;

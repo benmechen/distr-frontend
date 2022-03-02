@@ -861,6 +861,47 @@ export type IsRegisteredQuery = (
   ) }
 );
 
+export type CreateSystemMutationVariables = Exact<{
+  input: SystemCreateInput;
+}>;
+
+
+export type CreateSystemMutation = (
+  { __typename?: 'Mutation' }
+  & { systemCreate: (
+    { __typename?: 'System' }
+    & SystemRowFragment
+  ) }
+);
+
+export type SystemRowFragment = (
+  { __typename?: 'System' }
+  & Pick<System, 'id' | 'name'>
+  & { deployments: Array<(
+    { __typename?: 'Deployment' }
+    & Pick<Deployment, 'id' | 'name'>
+  )> }
+);
+
+export type GetSystemsQueryVariables = Exact<{
+  limit: Scalars['Int'];
+}>;
+
+
+export type GetSystemsQuery = (
+  { __typename?: 'Query' }
+  & { systems: (
+    { __typename?: 'SystemConnection' }
+    & { edges?: Maybe<Array<(
+      { __typename?: 'SystemEdge' }
+      & { node: (
+        { __typename?: 'System' }
+        & SystemRowFragment
+      ) }
+    )>> }
+  ) }
+);
+
 export type RefreshMutationVariables = Exact<{
   token: Scalars['String'];
 }>;
@@ -874,7 +915,16 @@ export type RefreshMutation = (
   )> }
 );
 
-
+export const SystemRowFragmentDoc = gql`
+    fragment SystemRow on System {
+  id
+  name
+  deployments {
+    id
+    name
+  }
+}
+    `;
 export const LoginDocument = gql`
     mutation Login($email: String!, $password: String!) {
   login(email: $email, password: $password) {
@@ -898,6 +948,32 @@ export const IsRegisteredDocument = gql`
 
 export function useIsRegisteredQuery(options: Omit<Urql.UseQueryArgs<IsRegisteredQueryVariables>, 'query'> = {}) {
   return Urql.useQuery<IsRegisteredQuery>({ query: IsRegisteredDocument, ...options });
+};
+export const CreateSystemDocument = gql`
+    mutation CreateSystem($input: SystemCreateInput!) {
+  systemCreate(input: $input) {
+    ...SystemRow
+  }
+}
+    ${SystemRowFragmentDoc}`;
+
+export function useCreateSystemMutation() {
+  return Urql.useMutation<CreateSystemMutation, CreateSystemMutationVariables>(CreateSystemDocument);
+};
+export const GetSystemsDocument = gql`
+    query GetSystems($limit: Int!) {
+  systems(limit: $limit) {
+    edges {
+      node {
+        ...SystemRow
+      }
+    }
+  }
+}
+    ${SystemRowFragmentDoc}`;
+
+export function useGetSystemsQuery(options: Omit<Urql.UseQueryArgs<GetSystemsQueryVariables>, 'query'> = {}) {
+  return Urql.useQuery<GetSystemsQuery>({ query: GetSystemsDocument, ...options });
 };
 export const RefreshDocument = gql`
     mutation refresh($token: String!) {
