@@ -11,7 +11,7 @@ export enum Platform {
 	OTHER = 'Other',
 }
 
-interface IDeploymentFormData {
+export interface IDeploymentFormData {
 	name: string;
 	aws_id?: string;
 	aws_secret?: string;
@@ -107,9 +107,9 @@ const DeploymentForm = ({ type, name, onSubmit }: IDeploymentForm) => {
 				</>
 			)}
 			{type === 'create' ? (
-				<Button>Create Deployment</Button>
+				<Button type="submit">Create Deployment</Button>
 			) : (
-				<Button>Save Changes</Button>
+				<Button type="submit">Save Changes</Button>
 			)}
 		</form>
 	);

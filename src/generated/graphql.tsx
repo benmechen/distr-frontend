@@ -926,6 +926,20 @@ export type GetSystemsQuery = (
   ) }
 );
 
+export type CreateDeploymentMutationVariables = Exact<{
+  systemID: Scalars['ID'];
+  input: DeploymentCreateInput;
+}>;
+
+
+export type CreateDeploymentMutation = (
+  { __typename?: 'Mutation' }
+  & { deploymentCreate: (
+    { __typename?: 'Deployment' }
+    & SingleDeploymentFragment
+  ) }
+);
+
 export type ResourceRowFragment = (
   { __typename?: 'Resource' }
   & Pick<Resource, 'id' | 'name' | 'status'>
@@ -1065,6 +1079,17 @@ export const GetSystemsDocument = gql`
 
 export function useGetSystemsQuery(options: Omit<Urql.UseQueryArgs<GetSystemsQueryVariables>, 'query'> = {}) {
   return Urql.useQuery<GetSystemsQuery>({ query: GetSystemsDocument, ...options });
+};
+export const CreateDeploymentDocument = gql`
+    mutation CreateDeployment($systemID: ID!, $input: DeploymentCreateInput!) {
+  deploymentCreate(systemID: $systemID, input: $input) {
+    ...SingleDeployment
+  }
+}
+    ${SingleDeploymentFragmentDoc}`;
+
+export function useCreateDeploymentMutation() {
+  return Urql.useMutation<CreateDeploymentMutation, CreateDeploymentMutationVariables>(CreateDeploymentDocument);
 };
 export const GetDeploymentsForSystemDocument = gql`
     query GetDeploymentsForSystem($id: ID!) {
