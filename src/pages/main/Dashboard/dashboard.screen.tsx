@@ -1,58 +1,43 @@
+import { useEffect, useState } from 'react';
+import {
+	SystemRowFragment,
+	useGetSystemsQuery,
+} from '../../../generated/graphql';
+import { getNodesFromEdges } from '../../../utils/helper.service';
 import { Layout } from '../Layout';
 import { CreateSystemCard } from './components/CreateSystemCard';
 import { SystemCard } from './components/SystemCard';
 import { ISystemCard } from './components/SystemCard/SystemCard';
 
 const DashboardScreen = () => {
-	const systems: ISystemCard[] = [
-		{
-			id: '1',
-			name: 'Uplevyl',
-			status: {
-				healthy: 0,
-				unhealthy: 2,
-			},
-			deployments: [
-				{
-					id: '1234',
-					name: 'Staging',
-				},
-				{
-					id: '1234',
-					name: 'Production',
-				},
-				{
-					id: '1234',
-					name: 'Production',
-				},
-				{
-					id: '1234',
-					name: 'Production',
-				},
-			],
+	const [systems, setSystems] = useState<(SystemRowFragment & ISystemCard)[]>(
+		[],
+	);
+	const [{ data, fetching }] = useGetSystemsQuery({
+		variables: {
+			limit: 25,
 		},
-		{
-			id: '2',
-			name: 'Limelight',
-			status: {
-				healthy: 2,
-				unhealthy: 0,
-			},
-			deployments: [
-				{
-					id: '1234',
-					name: 'Staging',
+	});
+
+	useEffect(() => {
+		if (!data?.systems.edges) return;
+		const nodes = getNodesFromEdges(data?.systems.edges);
+
+		const systems: (SystemRowFragment & ISystemCard)[] = nodes.map(
+			(node) => ({
+				...node,
+				status: {
+					healthy: 1,
+					unhealthy: 0,
 				},
-				{
-					id: '1234',
-					name: 'Test',
-				},
-			],
-		},
-	];
+			}),
+		);
+		setSystems(systems);
+	}, [data]);
 
 	return (
 		<Layout
+			loading={fetching}
 			title={{
 				main: 'Your',
 				emphasis: 'Systems',

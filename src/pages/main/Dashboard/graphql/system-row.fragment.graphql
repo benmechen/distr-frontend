@@ -1,0 +1,8 @@
+fragment SystemRow on System {
+	id
+	name
+	deployments {
+		id
+		name
+	}
+}

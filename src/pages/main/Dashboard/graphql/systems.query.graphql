@@ -1,0 +1,9 @@
+query GetSystems($limit: Int!) {
+	systems(limit: $limit) {
+		edges {
+			node {
+				...SystemRow
+			}
+		}
+	}
+}
