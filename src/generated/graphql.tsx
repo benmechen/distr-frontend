@@ -168,6 +168,7 @@ export type Deployment = {
   /** Deployment name */
   name: Scalars['String'];
   resources: Array<Resource>;
+  status: StatusOverview;
   system: System;
   /** Date the object was last updated */
   updated: Scalars['DateTime'];
@@ -221,6 +222,11 @@ export type Input = {
   value?: Maybe<ValueInput>;
 };
 
+
+export enum Limit {
+  Limited = 'LIMITED',
+  Unlimited = 'UNLIMITED'
+}
 
 export type Mutation = {
   __typename?: 'Mutation';
@@ -576,6 +582,7 @@ export type Resource = {
   status: Status;
   /** Date the object was last updated */
   updated: Scalars['DateTime'];
+  usage: Usage;
 };
 
 export type ResourceCreateInput = {
@@ -646,6 +653,12 @@ export enum Status {
   Unrecognized = 'UNRECOGNIZED'
 }
 
+export type StatusOverview = {
+  __typename?: 'StatusOverview';
+  healthy: Scalars['Int'];
+  unhealthy: Scalars['Int'];
+};
+
 export type Struct = {
   __typename?: 'Struct';
   fields: Scalars['JSON'];
@@ -666,6 +679,7 @@ export type System = {
   /** System name */
   name: Scalars['String'];
   organisation: Organisation;
+  status: StatusOverview;
   /** Date the object was last updated */
   updated: Scalars['DateTime'];
 };
@@ -704,6 +718,13 @@ export type Tokens = {
   refreshToken: Scalars['String'];
   /** The role of the user. */
   role: Scalars['String'];
+};
+
+export type Usage = {
+  __typename?: 'Usage';
+  current?: Maybe<Scalars['Float']>;
+  limit?: Maybe<Scalars['Float']>;
+  type: Limit;
 };
 
 /** User (customer and staff) model */
@@ -877,7 +898,10 @@ export type CreateSystemMutation = (
 export type SystemRowFragment = (
   { __typename?: 'System' }
   & Pick<System, 'id' | 'name'>
-  & { deployments: Array<(
+  & { status: (
+    { __typename?: 'StatusOverview' }
+    & Pick<StatusOverview, 'healthy' | 'unhealthy'>
+  ), deployments: Array<(
     { __typename?: 'Deployment' }
     & Pick<Deployment, 'id' | 'name'>
   )> }
@@ -902,6 +926,58 @@ export type GetSystemsQuery = (
   ) }
 );
 
+export type CreateDeploymentMutationVariables = Exact<{
+  systemID: Scalars['ID'];
+  input: DeploymentCreateInput;
+}>;
+
+
+export type CreateDeploymentMutation = (
+  { __typename?: 'Mutation' }
+  & { deploymentCreate: (
+    { __typename?: 'Deployment' }
+    & SingleDeploymentFragment
+  ) }
+);
+
+export type ResourceRowFragment = (
+  { __typename?: 'Resource' }
+  & Pick<Resource, 'id' | 'name' | 'status'>
+  & { usage: (
+    { __typename?: 'Usage' }
+    & Pick<Usage, 'type' | 'limit' | 'current'>
+  ) }
+);
+
+export type SingleDeploymentFragment = (
+  { __typename?: 'Deployment' }
+  & Pick<Deployment, 'id' | 'name'>
+  & { status: (
+    { __typename?: 'StatusOverview' }
+    & Pick<StatusOverview, 'healthy' | 'unhealthy'>
+  ), resources: Array<(
+    { __typename?: 'Resource' }
+    & ResourceRowFragment
+  )> }
+);
+
+export type GetDeploymentsForSystemQueryVariables = Exact<{
+  id: Scalars['ID'];
+}>;
+
+
+export type GetDeploymentsForSystemQuery = (
+  { __typename?: 'Query' }
+  & { system: (
+    { __typename?: 'System' }
+    & Pick<System, 'id' | 'name'>
+    & { deployments: Array<(
+      { __typename?: 'Deployment' }
+      & SingleDeploymentFragment
+    )> }
+  ) }
+);
+
 export type RefreshMutationVariables = Exact<{
   token: Scalars['String'];
 }>;
@@ -919,12 +995,41 @@ export const SystemRowFragmentDoc = gql`
     fragment SystemRow on System {
   id
   name
+  status {
+    healthy
+    unhealthy
+  }
   deployments {
     id
     name
   }
 }
     `;
+export const ResourceRowFragmentDoc = gql`
+    fragment ResourceRow on Resource {
+  id
+  name
+  status
+  usage {
+    type
+    limit
+    current
+  }
+}
+    `;
+export const SingleDeploymentFragmentDoc = gql`
+    fragment SingleDeployment on Deployment {
+  id
+  name
+  status {
+    healthy
+    unhealthy
+  }
+  resources {
+    ...ResourceRow
+  }
+}
+    ${ResourceRowFragmentDoc}`;
 export const LoginDocument = gql`
     mutation Login($email: String!, $password: String!) {
   login(email: $email, password: $password) {
@@ -974,6 +1079,32 @@ export const GetSystemsDocument = gql`
 
 export function useGetSystemsQuery(options: Omit<Urql.UseQueryArgs<GetSystemsQueryVariables>, 'query'> = {}) {
   return Urql.useQuery<GetSystemsQuery>({ query: GetSystemsDocument, ...options });
+};
+export const CreateDeploymentDocument = gql`
+    mutation CreateDeployment($systemID: ID!, $input: DeploymentCreateInput!) {
+  deploymentCreate(systemID: $systemID, input: $input) {
+    ...SingleDeployment
+  }
+}
+    ${SingleDeploymentFragmentDoc}`;
+
+export function useCreateDeploymentMutation() {
+  return Urql.useMutation<CreateDeploymentMutation, CreateDeploymentMutationVariables>(CreateDeploymentDocument);
+};
+export const GetDeploymentsForSystemDocument = gql`
+    query GetDeploymentsForSystem($id: ID!) {
+  system(id: $id) {
+    id
+    name
+    deployments {
+      ...SingleDeployment
+    }
+  }
+}
+    ${SingleDeploymentFragmentDoc}`;
+
+export function useGetDeploymentsForSystemQuery(options: Omit<Urql.UseQueryArgs<GetDeploymentsForSystemQueryVariables>, 'query'> = {}) {
+  return Urql.useQuery<GetDeploymentsForSystemQuery>({ query: GetDeploymentsForSystemDocument, ...options });
 };
 export const RefreshDocument = gql`
     mutation refresh($token: String!) {

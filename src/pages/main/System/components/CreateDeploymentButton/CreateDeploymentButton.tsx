@@ -1,14 +1,54 @@
 import { Plus } from 'phosphor-react';
 import { useModal } from '../../../../../components/Modal';
-import { DeploymentForm } from '../Deployment/components/DeploymentForm';
+import {
+	DeploymentCredentialsInput,
+	useCreateDeploymentMutation,
+} from '../../../../../generated/graphql';
+import {
+	DeploymentForm,
+	IDeploymentFormData,
+} from '../Deployment/components/DeploymentForm';
 
-const CreateDeploymentButton = () => {
-	const [Modal, { open }] = useModal();
+interface ICreateDeploymentButton {
+	systemID: string;
+}
+const CreateDeploymentButton = ({ systemID }: ICreateDeploymentButton) => {
+	const [Modal, { open, close }] = useModal();
+	const [{ fetching }, createDeployment] = useCreateDeploymentMutation();
+
+	const handleCreateDeployment = async (data: IDeploymentFormData) => {
+		const credentials: DeploymentCredentialsInput = {};
+		if (data.aws_id && data.aws_secret && data.aws_region)
+			credentials.aws = {
+				id: data.aws_id,
+				secret: data.aws_secret,
+				region: data.aws_region,
+			};
+		if (data.azure_clientId && data.azure_tenantId && data.azure_secret)
+			credentials.azure = {
+				clientId: data.azure_clientId,
+				tenantId: data.azure_tenantId,
+				secret: data.azure_secret,
+			};
+
+		await createDeployment({
+			systemID,
+			input: {
+				name: data.name,
+				credentials,
+			},
+		});
+
+		close();
+	};
 
 	return (
 		<>
 			<Modal title="Create Deployment">
-				<DeploymentForm type="create" onSubmit={() => {}} />
+				<DeploymentForm
+					type="create"
+					onSubmit={handleCreateDeployment}
+				/>
 			</Modal>
 			<button
 				className="rounded-l-full w-20 h-20 bg-gradient-to-r from-cyan-500 to-blue-500 fixed p-5 flex transition-transform duration-150 hover:-translate-x-1"

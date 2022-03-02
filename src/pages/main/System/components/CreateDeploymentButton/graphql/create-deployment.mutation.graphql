@@ -1,0 +1,5 @@
+mutation CreateDeployment($systemID: ID!, $input: DeploymentCreateInput!) {
+	deploymentCreate(systemID: $systemID, input: $input) {
+		...SingleDeployment
+	}
+}

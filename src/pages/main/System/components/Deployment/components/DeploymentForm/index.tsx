@@ -1,3 +1,4 @@
-import DeploymentForm from './DeploymentForm';
+import DeploymentForm, { IDeploymentFormData } from './DeploymentForm';
 
 export { DeploymentForm };
+export type { IDeploymentFormData };
