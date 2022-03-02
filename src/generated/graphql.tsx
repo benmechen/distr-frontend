@@ -861,6 +861,19 @@ export type IsRegisteredQuery = (
   ) }
 );
 
+export type CreateSystemMutationVariables = Exact<{
+  input: SystemCreateInput;
+}>;
+
+
+export type CreateSystemMutation = (
+  { __typename?: 'Mutation' }
+  & { systemCreate: (
+    { __typename?: 'System' }
+    & SystemRowFragment
+  ) }
+);
+
 export type SystemRowFragment = (
   { __typename?: 'System' }
   & Pick<System, 'id' | 'name'>
@@ -935,6 +948,17 @@ export const IsRegisteredDocument = gql`
 
 export function useIsRegisteredQuery(options: Omit<Urql.UseQueryArgs<IsRegisteredQueryVariables>, 'query'> = {}) {
   return Urql.useQuery<IsRegisteredQuery>({ query: IsRegisteredDocument, ...options });
+};
+export const CreateSystemDocument = gql`
+    mutation CreateSystem($input: SystemCreateInput!) {
+  systemCreate(input: $input) {
+    ...SystemRow
+  }
+}
+    ${SystemRowFragmentDoc}`;
+
+export function useCreateSystemMutation() {
+  return Urql.useMutation<CreateSystemMutation, CreateSystemMutationVariables>(CreateSystemDocument);
 };
 export const GetSystemsDocument = gql`
     query GetSystems($limit: Int!) {
