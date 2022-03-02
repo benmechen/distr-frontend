@@ -1,0 +1,11 @@
+fragment SingleDeployment on Deployment {
+	id
+	name
+	status {
+		healthy
+		unhealthy
+	}
+	resources {
+		...ResourceRow
+	}
+}

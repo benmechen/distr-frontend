@@ -1,6 +1,10 @@
 fragment SystemRow on System {
 	id
 	name
+	status {
+		healthy
+		unhealthy
+	}
 	deployments {
 		id
 		name

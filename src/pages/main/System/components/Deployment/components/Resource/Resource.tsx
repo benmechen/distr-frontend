@@ -1,8 +1,12 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { StatusIndicator } from '../../../../../../../components/StatusIndicator';
-import { Status } from '../../../../../../../generated/graphql';
-import { IUsage, Usage } from './components/Usage';
+import {
+	Limit,
+	Status,
+	Usage as IUsage,
+} from '../../../../../../../generated/graphql';
+import { Usage } from './components/Usage';
 import { View } from './components/View';
 
 export interface IResource {
@@ -26,7 +30,15 @@ const Resource = ({ id, name, usage, status }: IResource) => {
 			<h3 className="text-xl font-light w-1/3 text-left overflow-hidden text-ellipsis">
 				{name}
 			</h3>
-			<Usage {...usage} />
+			{usage.type === Limit.Limited ? (
+				<Usage
+					type="limited"
+					current={usage.current ?? 0}
+					limit={usage.limit ?? 0}
+				/>
+			) : (
+				<Usage type="unlimited" />
+			)}
 			<StatusIndicator status={status} />
 			<View hover={hover} />
 		</button>

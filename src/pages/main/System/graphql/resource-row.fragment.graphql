@@ -1,0 +1,10 @@
+fragment ResourceRow on Resource {
+	id
+	name
+	status
+	usage {
+		type
+		limit
+		current
+	}
+}

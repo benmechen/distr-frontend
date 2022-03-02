@@ -1,0 +1,9 @@
+query GetDeploymentsForSystem($id: ID!) {
+	system(id: $id) {
+		id
+		name
+		deployments {
+			...SingleDeployment
+		}
+	}
+}
