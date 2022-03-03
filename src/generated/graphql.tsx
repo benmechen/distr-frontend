@@ -1072,6 +1072,46 @@ export type SingleServiceFragment = (
   ) }
 );
 
+export type GetServiceDetailsQueryVariables = Exact<{
+  id: Scalars['ID'];
+}>;
+
+
+export type GetServiceDetailsQuery = (
+  { __typename?: 'Query' }
+  & { service?: Maybe<(
+    { __typename?: 'Service' }
+    & ServiceDetailsFragment
+  )> }
+);
+
+export type ServiceDetailsFragment = (
+  { __typename?: 'Service' }
+  & Pick<Service, 'id' | 'name'>
+  & { inputs: Array<(
+    { __typename?: 'Field' }
+    & SingleInputFragment
+  )> }
+);
+
+export type SingleFlatInputFragment = (
+  { __typename?: 'Field' }
+  & Pick<Field, 'name' | 'description' | 'type' | 'required'>
+  & { defaultValue?: Maybe<(
+    { __typename?: 'Value' }
+    & Pick<Value, 'boolValue' | 'numberValue' | 'stringValue'>
+  )> }
+);
+
+export type SingleInputFragment = (
+  { __typename?: 'Field' }
+  & { fields?: Maybe<Array<(
+    { __typename?: 'Field' }
+    & SingleFlatInputFragment
+  )>> }
+  & SingleFlatInputFragment
+);
+
 export type CreateDeploymentMutationVariables = Exact<{
   systemID: Scalars['ID'];
   input: DeploymentCreateInput;
@@ -1173,6 +1213,36 @@ export const SingleServiceFragmentDoc = gql`
   }
 }
     `;
+export const SingleFlatInputFragmentDoc = gql`
+    fragment SingleFlatInput on Field {
+  name
+  defaultValue {
+    boolValue
+    numberValue
+    stringValue
+  }
+  description
+  type
+  required
+}
+    `;
+export const SingleInputFragmentDoc = gql`
+    fragment SingleInput on Field {
+  ...SingleFlatInput
+  fields {
+    ...SingleFlatInput
+  }
+}
+    ${SingleFlatInputFragmentDoc}`;
+export const ServiceDetailsFragmentDoc = gql`
+    fragment ServiceDetails on Service {
+  id
+  name
+  inputs {
+    ...SingleInput
+  }
+}
+    ${SingleInputFragmentDoc}`;
 export const ResourceRowFragmentDoc = gql`
     fragment ResourceRow on Resource {
   id
@@ -1284,6 +1354,17 @@ export const GetServiceDocument = gql`
 
 export function useGetServiceQuery(options: Omit<Urql.UseQueryArgs<GetServiceQueryVariables>, 'query'> = {}) {
   return Urql.useQuery<GetServiceQuery>({ query: GetServiceDocument, ...options });
+};
+export const GetServiceDetailsDocument = gql`
+    query GetServiceDetails($id: ID!) {
+  service(id: $id) {
+    ...ServiceDetails
+  }
+}
+    ${ServiceDetailsFragmentDoc}`;
+
+export function useGetServiceDetailsQuery(options: Omit<Urql.UseQueryArgs<GetServiceDetailsQueryVariables>, 'query'> = {}) {
+  return Urql.useQuery<GetServiceDetailsQuery>({ query: GetServiceDetailsDocument, ...options });
 };
 export const CreateDeploymentDocument = gql`
     mutation CreateDeployment($systemID: ID!, $input: DeploymentCreateInput!) {

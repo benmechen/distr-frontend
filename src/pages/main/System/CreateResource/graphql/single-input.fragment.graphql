@@ -1,0 +1,18 @@
+fragment SingleFlatInput on Field {
+	name
+	defaultValue {
+		boolValue
+		numberValue
+		stringValue
+	}
+	description
+	type
+	required
+}
+
+fragment SingleInput on Field {
+	...SingleFlatInput
+	fields {
+		...SingleFlatInput
+	}
+}

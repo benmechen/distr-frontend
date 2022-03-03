@@ -1,6 +1,11 @@
 import { useForm } from 'react-hook-form';
 import { Button } from '../../../../../components/Button';
-import { Field, FieldType } from '../../../../../generated/graphql';
+import { LoadingWrapper } from '../../../../../components/LoadingWrapper';
+import {
+	Field,
+	FieldType,
+	useGetServiceDetailsQuery,
+} from '../../../../../generated/graphql';
 import { Field as FieldInput } from '../components/Field';
 import { ServiceSideBar } from '../components/ServiceSideBar';
 
@@ -8,7 +13,13 @@ interface IServiceDetailsScreen {
 	serviceId: string;
 	next: (id: string) => void;
 }
-const ServiceDetailsScreen = ({ next }: IServiceDetailsScreen) => {
+const ServiceDetailsScreen = ({ serviceId, next }: IServiceDetailsScreen) => {
+	const [{ data, fetching }] = useGetServiceDetailsQuery({
+		variables: {
+			id: serviceId,
+		},
+	});
+
 	const fields: Field[] = [
 		{
 			name: 'name',
@@ -56,32 +67,34 @@ const ServiceDetailsScreen = ({ next }: IServiceDetailsScreen) => {
 	};
 
 	return (
-		<div className="flex justify-end flex-col md:flex-row">
-			<div className="w-full p-4 flex flex-col items-start max-h-full">
-				<div className="w-full md:w-3/4 max-h-full">
-					<h2 className="text-2xl">{service.name}</h2>
-					<p className="mt-4 font-light">
-						Fill out the details below.
-					</p>
-					<form action="" className="w-full md:w-1/2 lg:2/5 mt-6">
-						{service.inputs.map((field) => (
-							<FieldInput
-								className="mt-4"
-								{...field}
-								{...register(field.name)}
-							/>
-						))}
-						<Button
-							onClick={handleSubmit(handleCreate)}
-							className="mt-8 w-full"
-						>
-							Create Resource
-						</Button>
-					</form>
+		<LoadingWrapper loading={fetching}>
+			<div className="flex justify-end flex-col md:flex-row">
+				<div className="w-full p-4 flex flex-col items-start max-h-full">
+					<div className="w-full md:w-3/4 max-h-full">
+						<h2 className="text-2xl">{data?.service?.name}</h2>
+						<p className="mt-4 font-light">
+							Fill out the details below.
+						</p>
+						<form action="" className="w-full md:w-1/2 lg:2/5 mt-6">
+							{data?.service?.inputs.map((field) => (
+								<FieldInput
+									className="mt-4"
+									{...field}
+									{...register(field.name)}
+								/>
+							))}
+							<Button
+								onClick={handleSubmit(handleCreate)}
+								className="mt-8 w-full"
+							>
+								Create Resource
+							</Button>
+						</form>
+					</div>
 				</div>
+				<ServiceSideBar id={serviceId} />
 			</div>
-			<ServiceSideBar id="1234" />
-		</div>
+		</LoadingWrapper>
 	);
 };
 export default ServiceDetailsScreen;
