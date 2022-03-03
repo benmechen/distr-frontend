@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { Button } from '../../../../../../../components/Button';
 import { Input } from '../../../../../../../components/Input';
@@ -10,6 +9,7 @@ export interface ICreateServiceFormData {
 	name: string;
 	serviceUrl: string;
 	introspectionUrl: string;
+	summary: string;
 	documentation: string;
 	sourceCode: string;
 	description: string;
@@ -17,9 +17,14 @@ export interface ICreateServiceFormData {
 
 interface ICreateServiceForm {
 	onSubmit: SubmitHandler<ICreateServiceFormData>;
+	platform: Platform;
+	setPlatform: React.Dispatch<React.SetStateAction<Platform>>;
 }
-const CreateServiceForm = ({ onSubmit }: ICreateServiceForm) => {
-	const [platform, setPlatform] = useState<Platform>(Platform.Aws);
+const CreateServiceForm = ({
+	onSubmit,
+	platform,
+	setPlatform,
+}: ICreateServiceForm) => {
 	const { handleSubmit, register } = useForm<ICreateServiceFormData>();
 
 	return (
@@ -56,6 +61,7 @@ const CreateServiceForm = ({ onSubmit }: ICreateServiceForm) => {
 				placeholder="Introspection URL"
 				{...register('introspectionUrl')}
 			/>
+			<Input placeholder="Summary" {...register('summary')} />
 			<Input placeholder="Documentation" {...register('documentation')} />
 			<Input placeholder="Source Code" {...register('sourceCode')} />
 			<Textarea

@@ -263,8 +263,7 @@ export type Mutation = {
   resourceCreate: Resource;
   resourceDelete: Resource;
   resourceUpdate: Resource;
-  /** Create a new service object */
-  serviceCreate?: Maybe<Service>;
+  serviceCreate: Service;
   /** Delete existing service */
   serviceDelete?: Maybe<Service>;
   /** Update an existing service object */
@@ -666,6 +665,8 @@ export type Service = {
   created: Scalars['DateTime'];
   /** Service description */
   description: Scalars['String'];
+  /** Link to relevant documentation for the service */
+  documentationURL: Scalars['String'];
   /** Globally unique identifier */
   id: Scalars['ID'];
   inputs: Array<Field>;
@@ -673,10 +674,12 @@ export type Service = {
   introspectionURL: Scalars['String'];
   /** Service name */
   name: Scalars['String'];
-  /** Service description */
+  /** Platform the service operates on */
   platform: Platform;
   /** Location at which the service is hosted and gRPC messages can be sent */
   serviceURL: Scalars['String'];
+  /** Link to public source code */
+  sourceCodeURL: Scalars['String'];
   /** Brief summary of the service */
   summary: Scalars['String'];
   /** Date the object was last updated */
@@ -694,13 +697,22 @@ export type ServiceConnection = {
 };
 
 export type ServiceCreateInput = {
+  /** Full description and details of the service */
   description: Scalars['String'];
+  /** Link to relevant documentation for the service */
+  documentationURL: Scalars['String'];
   /** URL of proto introspection location */
   introspectionURL: Scalars['String'];
   /** Public name of the service */
   name: Scalars['String'];
+  /** Service platform */
+  platform: Platform;
   /** URL of service */
   serviceURL: Scalars['String'];
+  /** Link to public source code */
+  sourceCodeURL: Scalars['String'];
+  /** Short summary of the service */
+  summary: Scalars['String'];
 };
 
 export type ServiceEdge = {
@@ -1000,6 +1012,19 @@ export type GetSystemsQuery = (
   ) }
 );
 
+export type CreateServiceMutationVariables = Exact<{
+  input: ServiceCreateInput;
+}>;
+
+
+export type CreateServiceMutation = (
+  { __typename?: 'Mutation' }
+  & { serviceCreate: (
+    { __typename?: 'Service' }
+    & SingleServiceFragment
+  ) }
+);
+
 export type SearchServicesQueryVariables = Exact<{
   limit: Scalars['Int'];
   query?: Maybe<Scalars['String']>;
@@ -1222,6 +1247,17 @@ export const GetSystemsDocument = gql`
 
 export function useGetSystemsQuery(options: Omit<Urql.UseQueryArgs<GetSystemsQueryVariables>, 'query'> = {}) {
   return Urql.useQuery<GetSystemsQuery>({ query: GetSystemsDocument, ...options });
+};
+export const CreateServiceDocument = gql`
+    mutation CreateService($input: ServiceCreateInput!) {
+  serviceCreate(input: $input) {
+    ...SingleService
+  }
+}
+    ${SingleServiceFragmentDoc}`;
+
+export function useCreateServiceMutation() {
+  return Urql.useMutation<CreateServiceMutation, CreateServiceMutationVariables>(CreateServiceDocument);
 };
 export const SearchServicesDocument = gql`
     query SearchServices($limit: Int!, $query: String) {
