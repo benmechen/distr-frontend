@@ -1,0 +1,7 @@
+fragment ServiceRow on Service {
+	id
+	name
+	summary
+	platform
+	verified
+}

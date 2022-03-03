@@ -3,14 +3,7 @@ import { SubmitHandler, useForm } from 'react-hook-form';
 import { Button } from '../../../../../../../components/Button';
 import { Input } from '../../../../../../../components/Input';
 import { Platform as PlatformSelector } from '../../../../../../../components/Platform';
-
-export enum Platform {
-	AWS = 'AWS',
-	AZURE = 'Azure',
-	GCP = 'GCP',
-	OTHER = 'Other',
-}
-
+import { Platform } from '../../../../../../../generated/graphql';
 export interface IDeploymentFormData {
 	name: string;
 	aws_id?: string;
@@ -27,7 +20,7 @@ interface IDeploymentForm {
 	onSubmit: SubmitHandler<IDeploymentFormData>;
 }
 const DeploymentForm = ({ type, name, onSubmit }: IDeploymentForm) => {
-	const [platform, setPlatform] = useState<Platform>(Platform.AWS);
+	const [platform, setPlatform] = useState<Platform>(Platform.Aws);
 	const { handleSubmit, register } = useForm<IDeploymentFormData>({
 		defaultValues: {
 			name,
@@ -42,31 +35,31 @@ const DeploymentForm = ({ type, name, onSubmit }: IDeploymentForm) => {
 			/>
 			<div className="rounded-lg bg-gray-100 w-full h-12 flex items-center justify-around overflow-hidden">
 				<PlatformSelector
-					selected={platform === Platform.AWS}
-					onClick={() => setPlatform(Platform.AWS)}
+					selected={platform === Platform.Aws}
+					onClick={() => setPlatform(Platform.Aws)}
 				>
 					AWS
 				</PlatformSelector>
 				<PlatformSelector
-					selected={platform === Platform.AZURE}
-					onClick={() => setPlatform(Platform.AZURE)}
+					selected={platform === Platform.Azure}
+					onClick={() => setPlatform(Platform.Azure)}
 				>
 					Azure
 				</PlatformSelector>
 				<PlatformSelector
-					selected={platform === Platform.GCP}
-					onClick={() => setPlatform(Platform.GCP)}
+					selected={platform === Platform.Gcp}
+					onClick={() => setPlatform(Platform.Gcp)}
 				>
 					GCP
 				</PlatformSelector>
 				<PlatformSelector
-					selected={platform === Platform.OTHER}
-					onClick={() => setPlatform(Platform.OTHER)}
+					selected={platform === Platform.Other}
+					onClick={() => setPlatform(Platform.Other)}
 				>
 					Other
 				</PlatformSelector>
 			</div>
-			{platform === Platform.AWS ? (
+			{platform === Platform.Aws ? (
 				<>
 					<Input
 						placeholder="Access Key ID"
@@ -82,7 +75,7 @@ const DeploymentForm = ({ type, name, onSubmit }: IDeploymentForm) => {
 						{...register('aws_region', { required: true })}
 					/>
 				</>
-			) : platform === Platform.AZURE ? (
+			) : platform === Platform.Azure ? (
 				<>
 					<Input
 						placeholder="Tenant ID"

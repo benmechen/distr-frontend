@@ -1,0 +1,11 @@
+fragment SingleService on Service {
+	id
+	name
+	summary
+	verified
+	description
+	platform
+	author {
+		name
+	}
+}

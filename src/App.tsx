@@ -14,10 +14,14 @@ import SystemScreen from './pages/main/System/system.screen';
 import CreateResourceScreen from './pages/main/System/CreateResource/create-resource.screen';
 import MarketplaceScreen from './pages/main/Marketplace/marketplace.screen';
 import ResourceScreen from './pages/main/System/Resource/resource.screen';
+import { CreateServiceUpdater } from './pages/main/Marketplace/components/CreateServiceCard/graphql/create-service.updater';
 
 function App() {
 	const client = useMemo(
-		() => new ClientService(`${import.meta.env.VITE_API_URL}/graphql`),
+		() =>
+			new ClientService(`${import.meta.env.VITE_API_URL}/graphql`, [
+				new CreateServiceUpdater(),
+			]),
 		[],
 	);
 	const [isLoggedIn, setLoggedIn] = useState<boolean | null>(null);

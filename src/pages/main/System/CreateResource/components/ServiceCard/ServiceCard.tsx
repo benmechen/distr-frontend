@@ -1,5 +1,5 @@
+import { Platform } from '../../../../../../generated/graphql';
 import { Card } from '../../../../Dashboard/components/Card';
-import { Platform } from '../../../components/Deployment/components/DeploymentForm/DeploymentForm';
 import { VerifiedBadge } from '../ServiceSideBar/components/VerifiedBadge';
 
 interface IServiceCard {
@@ -29,9 +29,9 @@ const ServiceCard = ({
 		<div className="w-full flex items-center justify-between">
 			<span
 				className={`lowercase ${
-					platform === Platform.AWS
+					platform === Platform.Aws
 						? 'bg-gray-800 text-orange-600'
-						: platform === Platform.AZURE
+						: platform === Platform.Azure
 						? 'bg-blue-500 text-white'
 						: 'bg-gray-700 text-white'
 				} px-1 rounded-br-md`}

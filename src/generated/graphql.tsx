@@ -264,6 +264,12 @@ export type Mutation = {
   resourceDelete: Resource;
   resourceUpdate: Resource;
   serviceCreate: Service;
+  /** Delete existing service */
+  serviceDelete?: Maybe<Service>;
+  /** Update an existing service object */
+  serviceUpdate?: Maybe<Service>;
+  /** Delete a set of services */
+  servicesDelete: Array<Scalars['ID']>;
   systemCreate: System;
   systemDelete: Scalars['Boolean'];
   systemUpdate: System;
@@ -396,6 +402,22 @@ export type MutationServiceCreateArgs = {
 };
 
 
+export type MutationServiceDeleteArgs = {
+  id: Scalars['ID'];
+};
+
+
+export type MutationServiceUpdateArgs = {
+  id: Scalars['ID'];
+  input: ServiceUpdateInput;
+};
+
+
+export type MutationServicesDeleteArgs = {
+  ids: Array<Scalars['ID']>;
+};
+
+
 export type MutationSystemCreateArgs = {
   input: SystemCreateInput;
 };
@@ -468,6 +490,14 @@ export type PageInfo = {
   total: Scalars['Int'];
 };
 
+/** Platforms services can be hosted on */
+export enum Platform {
+  Aws = 'AWS',
+  Azure = 'Azure',
+  Gcp = 'GCP',
+  Other = 'Other'
+}
+
 export type Property = {
   __typename?: 'Property';
   /** Property name */
@@ -487,7 +517,12 @@ export type Query = {
   /** Get the currently logged in user */
   me: User;
   resource: Resource;
-  service: Service;
+  /** Get a single service */
+  service?: Maybe<Service>;
+  /** Get a paginated list of service objects */
+  services: ServiceConnection;
+  /** Get mutliple services */
+  servicesMany: ServiceConnection;
   system: System;
   systems: SystemConnection;
   /** Get a single user */
@@ -501,7 +536,7 @@ export type Query = {
 
 
 export type QueryArticleArgs = {
-  id: Scalars['String'];
+  id: Scalars['ID'];
 };
 
 
@@ -533,6 +568,19 @@ export type QueryServiceArgs = {
 };
 
 
+export type QueryServicesArgs = {
+  filter?: Maybe<ConnectionFilter>;
+  limit: Scalars['Int'];
+  page?: Maybe<Scalars['Int']>;
+  sort?: Maybe<ConnectionSort>;
+};
+
+
+export type QueryServicesManyArgs = {
+  ids: Array<Scalars['ID']>;
+};
+
+
 export type QuerySystemArgs = {
   id: Scalars['ID'];
 };
@@ -547,7 +595,7 @@ export type QuerySystemsArgs = {
 
 
 export type QueryUserArgs = {
-  id: Scalars['String'];
+  id: Scalars['ID'];
 };
 
 
@@ -610,12 +658,15 @@ export type ResourceUpdateInput = {
 /** Service model */
 export type Service = {
   __typename?: 'Service';
+  author: Organisation;
   /** Is this service blocked? */
   blocked: Scalars['Boolean'];
   /** Date the object was created */
   created: Scalars['DateTime'];
   /** Service description */
   description: Scalars['String'];
+  /** Link to relevant documentation for the service */
+  documentationURL: Scalars['String'];
   /** Globally unique identifier */
   id: Scalars['ID'];
   inputs: Array<Field>;
@@ -623,26 +674,61 @@ export type Service = {
   introspectionURL: Scalars['String'];
   /** Service name */
   name: Scalars['String'];
+  /** Platform the service operates on */
+  platform: Platform;
   /** Location at which the service is hosted and gRPC messages can be sent */
   serviceURL: Scalars['String'];
+  /** Link to public source code */
+  sourceCodeURL: Scalars['String'];
+  /** Brief summary of the service */
+  summary: Scalars['String'];
   /** Date the object was last updated */
   updated: Scalars['DateTime'];
+  /** Is the service verified by Distr? */
+  verified: Scalars['Boolean'];
+};
+
+/** Paginated list of services */
+export type ServiceConnection = {
+  __typename?: 'ServiceConnection';
+  edges?: Maybe<Array<ServiceEdge>>;
+  /** Pagination details */
+  pageInfo: PageInfo;
 };
 
 export type ServiceCreateInput = {
+  /** Full description and details of the service */
   description: Scalars['String'];
+  /** Link to relevant documentation for the service */
+  documentationURL: Scalars['String'];
   /** URL of proto introspection location */
   introspectionURL: Scalars['String'];
   /** Public name of the service */
   name: Scalars['String'];
+  /** Service platform */
+  platform: Platform;
   /** URL of service */
   serviceURL: Scalars['String'];
+  /** Link to public source code */
+  sourceCodeURL: Scalars['String'];
+  /** Short summary of the service */
+  summary: Scalars['String'];
 };
 
 export type ServiceEdge = {
   __typename?: 'ServiceEdge';
   cursor: Scalars['String'];
   node: Service;
+};
+
+export type ServiceUpdateInput = {
+  description?: Maybe<Scalars['String']>;
+  /** URL of proto introspection location */
+  introspectionURL?: Maybe<Scalars['String']>;
+  /** Public name of the service */
+  name?: Maybe<Scalars['String']>;
+  /** URL of service */
+  serviceURL?: Maybe<Scalars['String']>;
 };
 
 /** Resource status */
@@ -926,6 +1012,66 @@ export type GetSystemsQuery = (
   ) }
 );
 
+export type CreateServiceMutationVariables = Exact<{
+  input: ServiceCreateInput;
+}>;
+
+
+export type CreateServiceMutation = (
+  { __typename?: 'Mutation' }
+  & { serviceCreate: (
+    { __typename?: 'Service' }
+    & SingleServiceFragment
+  ) }
+);
+
+export type SearchServicesQueryVariables = Exact<{
+  limit: Scalars['Int'];
+  query?: Maybe<Scalars['String']>;
+}>;
+
+
+export type SearchServicesQuery = (
+  { __typename?: 'Query' }
+  & { services: (
+    { __typename?: 'ServiceConnection' }
+    & { edges?: Maybe<Array<(
+      { __typename?: 'ServiceEdge' }
+      & { node: (
+        { __typename?: 'Service' }
+        & ServiceRowFragment
+      ) }
+    )>> }
+  ) }
+);
+
+export type ServiceRowFragment = (
+  { __typename?: 'Service' }
+  & Pick<Service, 'id' | 'name' | 'summary' | 'platform' | 'verified'>
+);
+
+export type GetServiceQueryVariables = Exact<{
+  id: Scalars['ID'];
+}>;
+
+
+export type GetServiceQuery = (
+  { __typename?: 'Query' }
+  & { service?: Maybe<(
+    { __typename?: 'Service' }
+    & SingleServiceFragment
+  )> }
+);
+
+export type SingleServiceFragment = (
+  { __typename?: 'Service' }
+  & Pick<Service, 'id' | 'name' | 'summary' | 'verified' | 'description' | 'platform'>
+  & { author: (
+    { __typename?: 'Organisation' }
+    & Pick<Organisation, 'name'>
+  ) }
+);
+
 export type CreateDeploymentMutationVariables = Exact<{
   systemID: Scalars['ID'];
   input: DeploymentCreateInput;
@@ -1005,6 +1151,28 @@ export const SystemRowFragmentDoc = gql`
   }
 }
     `;
+export const ServiceRowFragmentDoc = gql`
+    fragment ServiceRow on Service {
+  id
+  name
+  summary
+  platform
+  verified
+}
+    `;
+export const SingleServiceFragmentDoc = gql`
+    fragment SingleService on Service {
+  id
+  name
+  summary
+  verified
+  description
+  platform
+  author {
+    name
+  }
+}
+    `;
 export const ResourceRowFragmentDoc = gql`
     fragment ResourceRow on Resource {
   id
@@ -1079,6 +1247,43 @@ export const GetSystemsDocument = gql`
 
 export function useGetSystemsQuery(options: Omit<Urql.UseQueryArgs<GetSystemsQueryVariables>, 'query'> = {}) {
   return Urql.useQuery<GetSystemsQuery>({ query: GetSystemsDocument, ...options });
+};
+export const CreateServiceDocument = gql`
+    mutation CreateService($input: ServiceCreateInput!) {
+  serviceCreate(input: $input) {
+    ...SingleService
+  }
+}
+    ${SingleServiceFragmentDoc}`;
+
+export function useCreateServiceMutation() {
+  return Urql.useMutation<CreateServiceMutation, CreateServiceMutationVariables>(CreateServiceDocument);
+};
+export const SearchServicesDocument = gql`
+    query SearchServices($limit: Int!, $query: String) {
+  services(limit: $limit, filter: {query: $query}) {
+    edges {
+      node {
+        ...ServiceRow
+      }
+    }
+  }
+}
+    ${ServiceRowFragmentDoc}`;
+
+export function useSearchServicesQuery(options: Omit<Urql.UseQueryArgs<SearchServicesQueryVariables>, 'query'> = {}) {
+  return Urql.useQuery<SearchServicesQuery>({ query: SearchServicesDocument, ...options });
+};
+export const GetServiceDocument = gql`
+    query GetService($id: ID!) {
+  service(id: $id) {
+    ...SingleService
+  }
+}
+    ${SingleServiceFragmentDoc}`;
+
+export function useGetServiceQuery(options: Omit<Urql.UseQueryArgs<GetServiceQueryVariables>, 'query'> = {}) {
+  return Urql.useQuery<GetServiceQuery>({ query: GetServiceDocument, ...options });
 };
 export const CreateDeploymentDocument = gql`
     mutation CreateDeployment($systemID: ID!, $input: DeploymentCreateInput!) {

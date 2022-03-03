@@ -1,15 +1,15 @@
-import { useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { Button } from '../../../../../../../components/Button';
 import { Input } from '../../../../../../../components/Input';
 import { Platform as PlatformSelector } from '../../../../../../../components/Platform';
 import { Textarea } from '../../../../../../../components/Textarea';
-import { Platform } from '../../../../../System/components/Deployment/components/DeploymentForm/DeploymentForm';
+import { Platform } from '../../../../../../../generated/graphql';
 
 export interface ICreateServiceFormData {
 	name: string;
 	serviceUrl: string;
 	introspectionUrl: string;
+	summary: string;
 	documentation: string;
 	sourceCode: string;
 	description: string;
@@ -17,9 +17,14 @@ export interface ICreateServiceFormData {
 
 interface ICreateServiceForm {
 	onSubmit: SubmitHandler<ICreateServiceFormData>;
+	platform: Platform;
+	setPlatform: React.Dispatch<React.SetStateAction<Platform>>;
 }
-const CreateServiceForm = ({ onSubmit }: ICreateServiceForm) => {
-	const [platform, setPlatform] = useState<Platform>(Platform.AWS);
+const CreateServiceForm = ({
+	onSubmit,
+	platform,
+	setPlatform,
+}: ICreateServiceForm) => {
 	const { handleSubmit, register } = useForm<ICreateServiceFormData>();
 
 	return (
@@ -27,26 +32,26 @@ const CreateServiceForm = ({ onSubmit }: ICreateServiceForm) => {
 			<Input placeholder="Name" {...register('name')} />
 			<div className="rounded-lg bg-gray-100 w-full h-12 flex items-center justify-around overflow-hidden">
 				<PlatformSelector
-					selected={platform === Platform.AWS}
-					onClick={() => setPlatform(Platform.AWS)}
+					selected={platform === Platform.Aws}
+					onClick={() => setPlatform(Platform.Aws)}
 				>
 					AWS
 				</PlatformSelector>
 				<PlatformSelector
-					selected={platform === Platform.AZURE}
-					onClick={() => setPlatform(Platform.AZURE)}
+					selected={platform === Platform.Azure}
+					onClick={() => setPlatform(Platform.Azure)}
 				>
 					Azure
 				</PlatformSelector>
 				<PlatformSelector
-					selected={platform === Platform.GCP}
-					onClick={() => setPlatform(Platform.GCP)}
+					selected={platform === Platform.Gcp}
+					onClick={() => setPlatform(Platform.Gcp)}
 				>
 					GCP
 				</PlatformSelector>
 				<PlatformSelector
-					selected={platform === Platform.OTHER}
-					onClick={() => setPlatform(Platform.OTHER)}
+					selected={platform === Platform.Other}
+					onClick={() => setPlatform(Platform.Other)}
 				>
 					Other
 				</PlatformSelector>
@@ -56,6 +61,7 @@ const CreateServiceForm = ({ onSubmit }: ICreateServiceForm) => {
 				placeholder="Introspection URL"
 				{...register('introspectionUrl')}
 			/>
+			<Input placeholder="Summary" {...register('summary')} />
 			<Input placeholder="Documentation" {...register('documentation')} />
 			<Input placeholder="Source Code" {...register('sourceCode')} />
 			<Textarea

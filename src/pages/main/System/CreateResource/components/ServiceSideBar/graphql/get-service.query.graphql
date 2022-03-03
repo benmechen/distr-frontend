@@ -1,0 +1,5 @@
+query GetService($id: ID!) {
+	service(id: $id) {
+		...SingleService
+	}
+}

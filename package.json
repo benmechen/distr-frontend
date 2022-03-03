@@ -11,8 +11,10 @@
         "format": "prettier \"**/*.{ts,tsx}\" --write"
     },
     "dependencies": {
+        "@graphql-codegen/introspection": "^2.1.1",
         "@tailwindcss/aspect-ratio": "^0.4.0",
         "@urql/exchange-auth": "^0.1.7",
+        "@urql/exchange-graphcache": "^4.3.6",
         "graphql": "^15.5.0",
         "phosphor-react": "^1.4.0",
         "react": "^17.0.2",
