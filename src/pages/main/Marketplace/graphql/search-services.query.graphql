@@ -1,0 +1,9 @@
+query SearchServices($limit: Int!, $query: String) {
+	services(limit: $limit, filter: { query: $query }) {
+		edges {
+			node {
+				...ServiceRow
+			}
+		}
+	}
+}

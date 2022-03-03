@@ -1,8 +1,6 @@
 import { useState } from 'react';
 import { Button } from '../../../../../components/Button';
-import { Input } from '../../../../../components/Input';
-import { Platform } from '../../components/Deployment/components/DeploymentForm/DeploymentForm';
-import { ServiceCard } from '../components/ServiceCard';
+import { Marketplace } from '../../../../../components/Marketplace';
 import { ServiceSideBar } from '../components/ServiceSideBar';
 
 interface ISelectServiceScreen {
@@ -10,8 +8,6 @@ interface ISelectServiceScreen {
 }
 const SelectServiceScreen = ({ next }: ISelectServiceScreen) => {
 	const [selectedService, setSelectedService] = useState<string>();
-
-	const handleServiceClick = (id: string) => setSelectedService(id);
 
 	return (
 		<div className="flex justify-end">
@@ -24,77 +20,14 @@ const SelectServiceScreen = ({ next }: ISelectServiceScreen) => {
 					<p className="font-light">
 						Services let you control cloud resources.
 					</p>
-					<Input className="mt-4" placeholder="Search for services" />
-					<div className="flex justify-between flex-wrap gap-4 mt-6 pr-4 pb-4 max-h-full overflow-scroll no-scrollbar">
-						<ServiceCard
-							id="1"
-							name="S3"
-							platform={Platform.AWS}
-							summary="Simple Storage Service"
-							selected={selectedService === '1'}
-							onClick={handleServiceClick}
-						/>
-						<ServiceCard
-							id="2"
-							name="Blob Storage"
-							platform={Platform.AZURE}
-							summary="Store large amounts of unstructured data"
-							selected={selectedService === '2'}
-							onClick={handleServiceClick}
-						/>
-						<ServiceCard
-							id="3"
-							name="Big Query"
-							platform={Platform.GCP}
-							summary="Scalable datawarehouse"
-							selected={selectedService === '3'}
-							onClick={handleServiceClick}
-						/>
-						<ServiceCard
-							id="4"
-							name="Digital OceanDroplet"
-							platform={Platform.OTHER}
-							summary="Affordable servers"
-							selected={selectedService === '4'}
-							onClick={handleServiceClick}
-						/>
-						<ServiceCard
-							id="5"
-							name="Service Name"
-							platform={Platform.OTHER}
-							summary="Short description"
-							selected={selectedService === '5'}
-							onClick={handleServiceClick}
-						/>
-						<ServiceCard
-							id="6"
-							name="Service Name"
-							platform={Platform.OTHER}
-							summary="Short description"
-							selected={selectedService === '6'}
-							onClick={handleServiceClick}
-						/>
-						<ServiceCard
-							id="7"
-							name="Service Name"
-							platform={Platform.OTHER}
-							summary="Short description"
-							selected={selectedService === '7'}
-							onClick={handleServiceClick}
-						/>
-						<ServiceCard
-							id="8"
-							name="Service Name"
-							platform={Platform.OTHER}
-							summary="Short description"
-							selected={selectedService === '8'}
-							onClick={handleServiceClick}
-						/>
-					</div>
+					<Marketplace
+						selectedService={selectedService}
+						setSelectedService={setSelectedService}
+					/>
 				</div>
 			</div>
 			{selectedService ? (
-				<ServiceSideBar id="1234">
+				<ServiceSideBar id={selectedService}>
 					<Button
 						onClick={() => selectedService && next(selectedService)}
 						className="w-full mt-12"
