@@ -5,6 +5,7 @@ import { Field as FieldInput } from '../components/Field';
 import { ServiceSideBar } from '../components/ServiceSideBar';
 
 interface IServiceDetailsScreen {
+	serviceId: string;
 	next: (id: string) => void;
 }
 const ServiceDetailsScreen = ({ next }: IServiceDetailsScreen) => {

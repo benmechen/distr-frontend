@@ -9,8 +9,12 @@ import { Layout } from '../../Layout';
 const CreateResourceScreen = () => {
 	const navigate = useNavigate();
 	const [page, setPage] = useState(0);
+	const [selectedService, setSelectedService] = useState<string>();
 
-	const onPage1 = (id: string) => setPage((page) => page + 1);
+	const onPage1 = (serviceId: string) => {
+		setSelectedService(serviceId);
+		setPage((page) => page + 1);
+	};
 	const onPage2 = (resourceId: string) => setPage((page) => page + 1);
 	const onPage3 = (systemId: string) => navigate(`/system/${systemId}`);
 
@@ -24,7 +28,12 @@ const CreateResourceScreen = () => {
 			<div className="pt-4 max-h-screen overflow-hidden items-center">
 				<PageIndicator page={page} />
 				{page === 0 && <SelectServiceScreen next={onPage1} />}
-				{page === 1 && <ServiceDetailsScreen next={onPage2} />}
+				{page === 1 && selectedService && (
+					<ServiceDetailsScreen
+						serviceId={selectedService}
+						next={onPage2}
+					/>
+				)}
 				{page === 2 && <ResourceDetailsScreen next={onPage3} />}
 			</div>
 		</Layout>
