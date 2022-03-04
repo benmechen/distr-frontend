@@ -40,7 +40,7 @@ const SystemScreen = () => {
 			<div className="w-screen h-screen p-14 pb-44 pt-28 flex items-center justify-center gap-14">
 				<CreateDeploymentButton systemID={id!} />
 				{deployments?.map((deployment) => (
-					<Deployment {...deployment} />
+					<Deployment key={deployment.id} {...deployment} />
 				))}
 			</div>
 		</Layout>

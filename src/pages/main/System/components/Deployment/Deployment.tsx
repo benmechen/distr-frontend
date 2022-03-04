@@ -1,20 +1,22 @@
 import { useModal } from '../../../../../components/Modal';
 import { OptionsButton } from '../../../../../components/OptionsButton';
 import { StatusHeader } from '../../../../../components/StatusHeader';
+import { ResourceRowFragment } from '../../../../../generated/graphql';
 import { CreateResourceButton } from './components/CreateResourceButton';
 import { DeploymentForm } from './components/DeploymentForm';
-import { IResource, Resource } from './components/Resource';
+import { Resource } from './components/Resource';
 
 export interface IDeployment {
+	id: string;
 	name: string;
 	status: {
 		healthy: number;
 		unhealthy: number;
 	};
-	resources: IResource[];
+	resources: ResourceRowFragment[];
 }
 
-const Deployment = ({ name, status, resources }: IDeployment) => {
+const Deployment = ({ id, name, status, resources }: IDeployment) => {
 	const [Modal, { open }] = useModal();
 
 	return (
@@ -30,9 +32,13 @@ const Deployment = ({ name, status, resources }: IDeployment) => {
 				<h2 className="text-2xl font-bold">{name}</h2>
 				<div className="w-full">
 					{resources.map((resource) => (
-						<Resource {...resource} />
+						<Resource
+							key={resource.id}
+							deploymentId={id}
+							{...resource}
+						/>
 					))}
-					<CreateResourceButton />
+					<CreateResourceButton deploymentId={id} />
 				</div>
 			</div>
 		</>

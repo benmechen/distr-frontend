@@ -1072,6 +1072,20 @@ export type SingleServiceFragment = (
   ) }
 );
 
+export type CreateResourceMutationVariables = Exact<{
+  deploymentID: Scalars['ID'];
+  input: ResourceCreateInput;
+}>;
+
+
+export type CreateResourceMutation = (
+  { __typename?: 'Mutation' }
+  & { resourceCreate: (
+    { __typename?: 'Resource' }
+    & SingleResourceFragment
+  ) }
+);
+
 export type GetServiceDetailsQueryVariables = Exact<{
   id: Scalars['ID'];
 }>;
@@ -1110,6 +1124,22 @@ export type SingleInputFragment = (
     & SingleFlatInputFragment
   )>> }
   & SingleFlatInputFragment
+);
+
+export type SingleResourceFragment = (
+  { __typename?: 'Resource' }
+  & Pick<Resource, 'id' | 'name' | 'status'>
+  & { usage: (
+    { __typename?: 'Usage' }
+    & Pick<Usage, 'current' | 'limit' | 'type'>
+  ), details: Array<(
+    { __typename?: 'Property' }
+    & Pick<Property, 'name'>
+    & { value?: Maybe<(
+      { __typename?: 'Value' }
+      & Pick<Value, 'stringValue' | 'boolValue' | 'numberValue'>
+    )> }
+  )> }
 );
 
 export type CreateDeploymentMutationVariables = Exact<{
@@ -1243,6 +1273,26 @@ export const ServiceDetailsFragmentDoc = gql`
   }
 }
     ${SingleInputFragmentDoc}`;
+export const SingleResourceFragmentDoc = gql`
+    fragment SingleResource on Resource {
+  id
+  name
+  status
+  usage {
+    current
+    limit
+    type
+  }
+  details {
+    name
+    value {
+      stringValue
+      boolValue
+      numberValue
+    }
+  }
+}
+    `;
 export const ResourceRowFragmentDoc = gql`
     fragment ResourceRow on Resource {
   id
@@ -1354,6 +1404,17 @@ export const GetServiceDocument = gql`
 
 export function useGetServiceQuery(options: Omit<Urql.UseQueryArgs<GetServiceQueryVariables>, 'query'> = {}) {
   return Urql.useQuery<GetServiceQuery>({ query: GetServiceDocument, ...options });
+};
+export const CreateResourceDocument = gql`
+    mutation CreateResource($deploymentID: ID!, $input: ResourceCreateInput!) {
+  resourceCreate(deploymentID: $deploymentID, input: $input) {
+    ...SingleResource
+  }
+}
+    ${SingleResourceFragmentDoc}`;
+
+export function useCreateResourceMutation() {
+  return Urql.useMutation<CreateResourceMutation, CreateResourceMutationVariables>(CreateResourceDocument);
 };
 export const GetServiceDetailsDocument = gql`
     query GetServiceDetails($id: ID!) {

@@ -38,7 +38,11 @@ const SystemCard = ({ id, name, status, deployments }: ISystemCard) => {
 				<h2 className="text-3xl font-light">{name}</h2>
 				<div className="max-w-full overflow-x-scroll flex gap-2 no-scrollbar">
 					{deployments.map((deployment, index) => (
-						<Deployment index={index} {...deployment} />
+						<Deployment
+							key={deployment.id}
+							index={index}
+							{...deployment}
+						/>
 					))}
 				</div>
 			</Card>

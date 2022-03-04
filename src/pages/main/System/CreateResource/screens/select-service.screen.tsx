@@ -1,13 +1,15 @@
 import { useState } from 'react';
 import { Button } from '../../../../../components/Button';
 import { Marketplace } from '../../../../../components/Marketplace';
+import { ServiceRowFragment } from '../../../../../generated/graphql';
 import { ServiceSideBar } from '../components/ServiceSideBar';
 
 interface ISelectServiceScreen {
-	next: (id: string) => void;
+	next: (service: ServiceRowFragment) => void;
 }
 const SelectServiceScreen = ({ next }: ISelectServiceScreen) => {
-	const [selectedService, setSelectedService] = useState<string>();
+	const [selectedService, setSelectedService] =
+		useState<ServiceRowFragment>();
 
 	return (
 		<div className="flex justify-end">
@@ -27,7 +29,7 @@ const SelectServiceScreen = ({ next }: ISelectServiceScreen) => {
 				</div>
 			</div>
 			{selectedService ? (
-				<ServiceSideBar id={selectedService}>
+				<ServiceSideBar id={selectedService.id}>
 					<Button
 						onClick={() => selectedService && next(selectedService)}
 						className="w-full mt-12"

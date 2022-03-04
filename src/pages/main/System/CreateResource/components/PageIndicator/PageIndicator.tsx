@@ -8,6 +8,7 @@ const PageIndicator = ({ page, total = 3 }: IPageIndicator) => {
 	for (let i = 0; i < total; i++) {
 		indicators.push(
 			<span
+				key={i}
 				className={`w-3 h-3 rounded-full border border-gray-900 ${
 					i === page && 'bg-gray-900'
 				} ${i !== total - 1 && 'mr-3'}`}

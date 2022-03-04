@@ -1,4 +1,7 @@
-import { Platform } from '../../../../../../generated/graphql';
+import {
+	Platform,
+	ServiceRowFragment,
+} from '../../../../../../generated/graphql';
 import { Card } from '../../../../Dashboard/components/Card';
 import { VerifiedBadge } from '../ServiceSideBar/components/VerifiedBadge';
 
@@ -9,7 +12,7 @@ interface IServiceCard {
 	verified?: boolean;
 	selected?: boolean;
 	summary: string;
-	onClick?: (id: string) => void;
+	onClick?: () => void;
 }
 const ServiceCard = ({
 	id,
@@ -24,7 +27,7 @@ const ServiceCard = ({
 		justify="between"
 		disableHover
 		className="px-0 py-0"
-		onClick={() => onClick?.(id)}
+		onClick={onClick}
 	>
 		<div className="w-full flex items-center justify-between">
 			<span

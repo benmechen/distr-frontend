@@ -65,11 +65,11 @@ function App() {
 									element={<SystemScreen />}
 								/>
 								<Route
-									path="system/:id/resource/new"
+									path="system/:systemId/:deploymentId/resource/new"
 									element={<CreateResourceScreen />}
 								/>
 								<Route
-									path="system/:systemId/resource/:id"
+									path="system/:systemId/:deploymentId/resource/:id"
 									element={<ResourceScreen />}
 								/>
 								<Route
