@@ -30,10 +30,15 @@ const SystemCard = ({ id, name, status, deployments }: ISystemCard) => {
 			<Modal title={name}>
 				<UpdateSystemForm name={name} onSubmit={() => {}} />
 			</Modal>
-			<Card onClick={goToSystem}>
+			<Card onClick={goToSystem} className="z-0">
 				<div className="flex w-full justify-between items-start">
 					<StatusHeader {...status} />
-					<OptionsButton onClick={open} />
+					<OptionsButton
+						onClick={(e) => {
+							e.stopPropagation();
+							open();
+						}}
+					/>
 				</div>
 				<h2 className="text-3xl font-light">{name}</h2>
 				<div className="max-w-full overflow-x-scroll flex gap-2 no-scrollbar">

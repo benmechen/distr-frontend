@@ -111,7 +111,7 @@ const DeploymentForm = ({
 				<Button type="submit">Save Changes</Button>
 			)}
 			{onDeleteClick && (
-				<TertiaryButton className="mt-2 w-1/4" onClick={onDeleteClick}>
+				<TertiaryButton className="mt-2" onClick={onDeleteClick}>
 					Delete Deployment
 				</TertiaryButton>
 			)}
