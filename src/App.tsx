@@ -19,12 +19,14 @@ import { CreateResourceUpdater } from './pages/main/System/CreateResource/graphq
 import { DeleteResourceUpdater } from './pages/main/System/Resource/graphql/delete-resource.updater';
 import { DeleteDeploymentUpdater } from './pages/main/System/components/Deployment/graphql/delete-deployment.updater';
 import { CreateDeploymentUpdater } from './pages/main/System/components/CreateDeploymentButton/graphql/create-deployment.updater';
+import { CreateSystemUpdater } from './pages/main/Dashboard/graphql/create-system.updater';
 
 function App() {
 	const client = useMemo(
 		() =>
 			new ClientService(`${import.meta.env.VITE_API_URL}/graphql`, [
 				new CreateServiceUpdater(),
+				new CreateSystemUpdater(),
 				new CreateDeploymentUpdater(),
 				new DeleteDeploymentUpdater(),
 				new CreateResourceUpdater(),
