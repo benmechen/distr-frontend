@@ -5,6 +5,10 @@ import { Card } from '../Card';
 import { Deployment } from './components/Deployment';
 import { StatusHeader } from '../../../../../components/StatusHeader';
 import { UpdateSystemForm } from './components/UpdateSystemForm';
+import { useDeleteSystemMutation } from '../../../../../generated/graphql';
+import { Loading } from '../../../../../components/Loading';
+import { LoadingWrapper } from '../../../../../components/LoadingWrapper';
+import { Button, SecondaryButton } from '../../../../../components/Button';
 
 export interface ISystemCard {
 	id: string;
@@ -21,22 +25,55 @@ export interface ISystemCard {
 
 const SystemCard = ({ id, name, status, deployments }: ISystemCard) => {
 	const navigate = useNavigate();
-	const [Modal, { open }] = useModal();
+	const [EditModal, { open: openEditModal, close: closeEditModal }] =
+		useModal();
+	const [DeleteModal, { open: openDeleteModal, close: closeDeleteModal }] =
+		useModal();
+
+	const [{ fetching: deleting }, deleteSystem] = useDeleteSystemMutation();
+
+	const handleDelete = async () => {
+		await deleteSystem({
+			id,
+		});
+		closeDeleteModal();
+	};
 
 	const goToSystem = () => navigate(`/system/${id}?name=${name}`);
 
 	return (
 		<>
-			<Modal title={name}>
-				<UpdateSystemForm name={name} onSubmit={() => {}} />
-			</Modal>
+			<DeleteModal title="Delete System">
+				<LoadingWrapper loading={deleting}>
+					<p>Are you sure you want to delete this system?</p>
+					<Button onClick={closeDeleteModal} className="mt-4 mr-2">
+						Cancel
+					</Button>
+					<SecondaryButton onClick={handleDelete}>
+						Delete
+					</SecondaryButton>
+				</LoadingWrapper>
+			</DeleteModal>
+
+			<EditModal title={name}>
+				<LoadingWrapper loading={deleting}>
+					<UpdateSystemForm
+						name={name}
+						onSubmit={() => {}}
+						onDeleteClick={() => {
+							closeEditModal();
+							openDeleteModal();
+						}}
+					/>
+				</LoadingWrapper>
+			</EditModal>
 			<Card onClick={goToSystem} className="z-0">
 				<div className="flex w-full justify-between items-start">
 					<StatusHeader {...status} />
 					<OptionsButton
 						onClick={(e) => {
 							e.stopPropagation();
-							open();
+							openEditModal();
 						}}
 					/>
 				</div>

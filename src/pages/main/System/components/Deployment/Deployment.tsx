@@ -42,7 +42,7 @@ const Deployment = ({ id, name, status, resources }: IDeployment) => {
 			<DeleteModal title="Delete Deployment">
 				<LoadingWrapper loading={deleting}>
 					<p>Are you sure you want to delete this deployment?</p>
-					<Button onClick={close} className="mt-4 mr-2">
+					<Button onClick={closeDeleteModal} className="mt-4 mr-2">
 						Cancel
 					</Button>
 					<SecondaryButton onClick={handleDelete}>

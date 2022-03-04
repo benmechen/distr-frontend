@@ -271,7 +271,7 @@ export type Mutation = {
   /** Delete a set of services */
   servicesDelete: Array<Scalars['ID']>;
   systemCreate: System;
-  systemDelete: Scalars['Boolean'];
+  systemDelete: System;
   systemUpdate: System;
   /** Sign up for an account */
   userCreate?: Maybe<UserCreateResponse>;
@@ -969,6 +969,19 @@ export type IsRegisteredQuery = (
   ) }
 );
 
+export type DeleteSystemMutationVariables = Exact<{
+  id: Scalars['ID'];
+}>;
+
+
+export type DeleteSystemMutation = (
+  { __typename?: 'Mutation' }
+  & { systemDelete: (
+    { __typename?: 'System' }
+    & Pick<System, 'id'>
+  ) }
+);
+
 export type CreateSystemMutationVariables = Exact<{
   input: SystemCreateInput;
 }>;
@@ -1395,6 +1408,17 @@ export const IsRegisteredDocument = gql`
 
 export function useIsRegisteredQuery(options: Omit<Urql.UseQueryArgs<IsRegisteredQueryVariables>, 'query'> = {}) {
   return Urql.useQuery<IsRegisteredQuery>({ query: IsRegisteredDocument, ...options });
+};
+export const DeleteSystemDocument = gql`
+    mutation DeleteSystem($id: ID!) {
+  systemDelete(id: $id) {
+    id
+  }
+}
+    `;
+
+export function useDeleteSystemMutation() {
+  return Urql.useMutation<DeleteSystemMutation, DeleteSystemMutationVariables>(DeleteSystemDocument);
 };
 export const CreateSystemDocument = gql`
     mutation CreateSystem($input: SystemCreateInput!) {

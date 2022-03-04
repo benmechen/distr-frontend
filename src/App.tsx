@@ -20,6 +20,7 @@ import { DeleteResourceUpdater } from './pages/main/System/Resource/graphql/dele
 import { DeleteDeploymentUpdater } from './pages/main/System/components/Deployment/graphql/delete-deployment.updater';
 import { CreateDeploymentUpdater } from './pages/main/System/components/CreateDeploymentButton/graphql/create-deployment.updater';
 import { CreateSystemUpdater } from './pages/main/Dashboard/graphql/create-system.updater';
+import { DeleteSystemUpdater } from './pages/main/Dashboard/components/SystemCard/graphql/delete-system.updater';
 
 function App() {
 	const client = useMemo(
@@ -27,6 +28,7 @@ function App() {
 			new ClientService(`${import.meta.env.VITE_API_URL}/graphql`, [
 				new CreateServiceUpdater(),
 				new CreateSystemUpdater(),
+				new DeleteSystemUpdater(),
 				new CreateDeploymentUpdater(),
 				new DeleteDeploymentUpdater(),
 				new CreateResourceUpdater(),

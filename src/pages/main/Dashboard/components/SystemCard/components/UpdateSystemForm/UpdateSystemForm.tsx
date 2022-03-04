@@ -9,9 +9,14 @@ export interface IUpdateSystemFormData {
 interface IUpdateSystemForm {
 	name?: string;
 	onSubmit: SubmitHandler<IUpdateSystemFormData>;
+	onDeleteClick?: () => void;
 }
 
-const UpdateSystemForm = ({ name, onSubmit }: IUpdateSystemForm) => {
+const UpdateSystemForm = ({
+	name,
+	onSubmit,
+	onDeleteClick,
+}: IUpdateSystemForm) => {
 	const { handleSubmit, register } = useForm<IUpdateSystemFormData>({
 		defaultValues: {
 			name,
@@ -25,7 +30,11 @@ const UpdateSystemForm = ({ name, onSubmit }: IUpdateSystemForm) => {
 				{...register('name', { required: true })}
 			/>
 			<Button>Save Changes</Button>
-			<TertiaryButton className="mt-2">Delete System</TertiaryButton>
+			{onDeleteClick && (
+				<TertiaryButton className="mt-2" onClick={onDeleteClick}>
+					Delete System
+				</TertiaryButton>
+			)}
 		</form>
 	);
 };
