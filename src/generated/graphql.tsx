@@ -1149,6 +1149,19 @@ export type SingleResourceFragment = (
   ) }
 );
 
+export type DeleteResourceMutationVariables = Exact<{
+  id: Scalars['ID'];
+}>;
+
+
+export type DeleteResourceMutation = (
+  { __typename?: 'Mutation' }
+  & { resourceDelete: (
+    { __typename?: 'Resource' }
+    & Pick<Resource, 'id'>
+  ) }
+);
+
 export type GetResourceQueryVariables = Exact<{
   id: Scalars['ID'];
 }>;
@@ -1454,6 +1467,17 @@ export const GetServiceDetailsDocument = gql`
 
 export function useGetServiceDetailsQuery(options: Omit<Urql.UseQueryArgs<GetServiceDetailsQueryVariables>, 'query'> = {}) {
   return Urql.useQuery<GetServiceDetailsQuery>({ query: GetServiceDetailsDocument, ...options });
+};
+export const DeleteResourceDocument = gql`
+    mutation DeleteResource($id: ID!) {
+  resourceDelete(id: $id) {
+    id
+  }
+}
+    `;
+
+export function useDeleteResourceMutation() {
+  return Urql.useMutation<DeleteResourceMutation, DeleteResourceMutationVariables>(DeleteResourceDocument);
 };
 export const GetResourceDocument = gql`
     query GetResource($id: ID!) {
