@@ -69,7 +69,7 @@ function App() {
 									element={<CreateResourceScreen />}
 								/>
 								<Route
-									path="system/:systemId/:deploymentId/resource/:id"
+									path="system/:systemId/:deploymentId/resource/:resourceId"
 									element={<ResourceScreen />}
 								/>
 								<Route

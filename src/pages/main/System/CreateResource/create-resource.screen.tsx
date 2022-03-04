@@ -9,17 +9,21 @@ import { ServiceRowFragment } from '../../../../generated/graphql';
 
 const CreateResourceScreen = () => {
 	const navigate = useNavigate();
-	const { deploymentId } = useParams();
+	const { systemId, deploymentId } = useParams();
 	const [page, setPage] = useState(0);
 	const [selectedService, setSelectedService] =
 		useState<ServiceRowFragment>();
+	const [createdResourceId, setCreatedResourceId] = useState<string>();
 
 	const onPage1 = (service: ServiceRowFragment) => {
 		setSelectedService(service);
 		setPage((page) => page + 1);
 	};
-	const onPage2 = (resourceId: string) => setPage((page) => page + 1);
-	const onPage3 = (systemId: string) => navigate(`/system/${systemId}`);
+	const onPage2 = (resourceId: string) => {
+		setCreatedResourceId(resourceId);
+		setPage((page) => page + 1);
+	};
+	const onPage3 = () => navigate(`/system/${systemId}`);
 
 	if (!deploymentId) return <Navigate to="/" />;
 	return (
@@ -39,7 +43,12 @@ const CreateResourceScreen = () => {
 						next={onPage2}
 					/>
 				)}
-				{page === 2 && <ResourceDetailsScreen next={onPage3} />}
+				{page === 2 && createdResourceId && (
+					<ResourceDetailsScreen
+						id={createdResourceId}
+						next={onPage3}
+					/>
+				)}
 			</div>
 		</Layout>
 	);

@@ -627,6 +627,7 @@ export type Resource = {
   id: Scalars['ID'];
   /** Resource name */
   name: Scalars['String'];
+  service: Service;
   status: Status;
   /** Date the object was last updated */
   updated: Scalars['DateTime'];
@@ -1139,7 +1140,26 @@ export type SingleResourceFragment = (
       { __typename?: 'Value' }
       & Pick<Value, 'stringValue' | 'boolValue' | 'numberValue'>
     )> }
-  )> }
+  )>, deployment: (
+    { __typename?: 'Deployment' }
+    & Pick<Deployment, 'id' | 'name'>
+  ), service: (
+    { __typename?: 'Service' }
+    & Pick<Service, 'id' | 'name'>
+  ) }
+);
+
+export type GetResourceQueryVariables = Exact<{
+  id: Scalars['ID'];
+}>;
+
+
+export type GetResourceQuery = (
+  { __typename?: 'Query' }
+  & { resource: (
+    { __typename?: 'Resource' }
+    & SingleResourceFragment
+  ) }
 );
 
 export type CreateDeploymentMutationVariables = Exact<{
@@ -1291,6 +1311,14 @@ export const SingleResourceFragmentDoc = gql`
       numberValue
     }
   }
+  deployment {
+    id
+    name
+  }
+  service {
+    id
+    name
+  }
 }
     `;
 export const ResourceRowFragmentDoc = gql`
@@ -1426,6 +1454,17 @@ export const GetServiceDetailsDocument = gql`
 
 export function useGetServiceDetailsQuery(options: Omit<Urql.UseQueryArgs<GetServiceDetailsQueryVariables>, 'query'> = {}) {
   return Urql.useQuery<GetServiceDetailsQuery>({ query: GetServiceDetailsDocument, ...options });
+};
+export const GetResourceDocument = gql`
+    query GetResource($id: ID!) {
+  resource(id: $id) {
+    ...SingleResource
+  }
+}
+    ${SingleResourceFragmentDoc}`;
+
+export function useGetResourceQuery(options: Omit<Urql.UseQueryArgs<GetResourceQueryVariables>, 'query'> = {}) {
+  return Urql.useQuery<GetResourceQuery>({ query: GetResourceDocument, ...options });
 };
 export const CreateDeploymentDocument = gql`
     mutation CreateDeployment($systemID: ID!, $input: DeploymentCreateInput!) {

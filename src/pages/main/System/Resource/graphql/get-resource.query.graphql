@@ -1,0 +1,5 @@
+query GetResource($id: ID!) {
+	resource(id: $id) {
+		...SingleResource
+	}
+}
