@@ -20,6 +20,7 @@ const CreateResourceScreen = () => {
 		setPage((page) => page + 1);
 	};
 	const onPage2 = (resourceId: string) => {
+		console.log(resourceId);
 		setCreatedResourceId(resourceId);
 		setPage((page) => page + 1);
 	};
