@@ -1,7 +1,12 @@
+import { Button, SecondaryButton } from '../../../../../components/Button';
+import { LoadingWrapper } from '../../../../../components/LoadingWrapper';
 import { useModal } from '../../../../../components/Modal';
 import { OptionsButton } from '../../../../../components/OptionsButton';
 import { StatusHeader } from '../../../../../components/StatusHeader';
-import { ResourceRowFragment } from '../../../../../generated/graphql';
+import {
+	ResourceRowFragment,
+	useDeleteDeploymentMutation,
+} from '../../../../../generated/graphql';
 import { CreateResourceButton } from './components/CreateResourceButton';
 import { DeploymentForm } from './components/DeploymentForm';
 import { Resource } from './components/Resource';
@@ -17,17 +22,49 @@ export interface IDeployment {
 }
 
 const Deployment = ({ id, name, status, resources }: IDeployment) => {
-	const [Modal, { open }] = useModal();
+	const [EditModal, { open: openEditModal, close: closeEditModal }] =
+		useModal();
+	const [DeleteModal, { open: openDeleteModal, close: closeDeleteModal }] =
+		useModal();
+
+	const [{ fetching: deleting }, deleteDeployment] =
+		useDeleteDeploymentMutation();
+
+	const handleDelete = async () => {
+		await deleteDeployment({
+			id,
+		});
+		closeDeleteModal();
+	};
 
 	return (
 		<>
-			<Modal title={name}>
-				<DeploymentForm type="update" name={name} onSubmit={() => {}} />
-			</Modal>
+			<DeleteModal title="Delete Deployment">
+				<LoadingWrapper loading={deleting}>
+					<p>Are you sure you want to delete this deployment?</p>
+					<Button onClick={close} className="mt-4 mr-2">
+						Cancel
+					</Button>
+					<SecondaryButton onClick={handleDelete}>
+						Delete
+					</SecondaryButton>
+				</LoadingWrapper>
+			</DeleteModal>
+			<EditModal title={name}>
+				<DeploymentForm
+					type="update"
+					name={name}
+					onSubmit={() => {}}
+					onDeleteClick={() => {
+						closeEditModal();
+						openDeleteModal();
+					}}
+				/>
+			</EditModal>
 			<div className="no-scrollbar w-112 pt-4 h-full overflow-y-scroll bg-white rounded-lg shadow-md flex flex-col justify-start items-center gap-6">
 				<div className="flex w-full justify-between items-start px-4">
 					<StatusHeader {...status} />
-					<OptionsButton onClick={open} />
+					<OptionsButton onClick={openEditModal} />
 				</div>
 				<h2 className="text-2xl font-bold">{name}</h2>
 				<div className="w-full">

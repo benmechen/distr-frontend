@@ -251,7 +251,7 @@ export type Mutation = {
   /** Delete a set of articles */
   articlesDelete: Array<Scalars['ID']>;
   deploymentCreate: Deployment;
-  deploymentDelete: Scalars['Boolean'];
+  deploymentDelete: Deployment;
   deploymentUpdate: Deployment;
   /** Get an access token using the user's email and password */
   login?: Maybe<Tokens>;
@@ -1189,6 +1189,19 @@ export type CreateDeploymentMutation = (
   ) }
 );
 
+export type DeleteDeploymentMutationVariables = Exact<{
+  id: Scalars['ID'];
+}>;
+
+
+export type DeleteDeploymentMutation = (
+  { __typename?: 'Mutation' }
+  & { deploymentDelete: (
+    { __typename?: 'Deployment' }
+    & Pick<Deployment, 'id'>
+  ) }
+);
+
 export type ResourceRowFragment = (
   { __typename?: 'Resource' }
   & Pick<Resource, 'id' | 'name' | 'status'>
@@ -1500,6 +1513,17 @@ export const CreateDeploymentDocument = gql`
 
 export function useCreateDeploymentMutation() {
   return Urql.useMutation<CreateDeploymentMutation, CreateDeploymentMutationVariables>(CreateDeploymentDocument);
+};
+export const DeleteDeploymentDocument = gql`
+    mutation DeleteDeployment($id: ID!) {
+  deploymentDelete(id: $id) {
+    id
+  }
+}
+    `;
+
+export function useDeleteDeploymentMutation() {
+  return Urql.useMutation<DeleteDeploymentMutation, DeleteDeploymentMutationVariables>(DeleteDeploymentDocument);
 };
 export const GetDeploymentsForSystemDocument = gql`
     query GetDeploymentsForSystem($id: ID!) {

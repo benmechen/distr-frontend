@@ -1,4 +1,5 @@
 import { Plus } from 'phosphor-react';
+import { LoadingWrapper } from '../../../../../components/LoadingWrapper';
 import { useModal } from '../../../../../components/Modal';
 import {
 	DeploymentCredentialsInput,
@@ -14,7 +15,8 @@ interface ICreateDeploymentButton {
 }
 const CreateDeploymentButton = ({ systemID }: ICreateDeploymentButton) => {
 	const [Modal, { open, close }] = useModal();
-	const [{ fetching }, createDeployment] = useCreateDeploymentMutation();
+	const [{ fetching: creating }, createDeployment] =
+		useCreateDeploymentMutation();
 
 	const handleCreateDeployment = async (data: IDeploymentFormData) => {
 		const credentials: DeploymentCredentialsInput = {};
@@ -45,10 +47,12 @@ const CreateDeploymentButton = ({ systemID }: ICreateDeploymentButton) => {
 	return (
 		<>
 			<Modal title="Create Deployment">
-				<DeploymentForm
-					type="create"
-					onSubmit={handleCreateDeployment}
-				/>
+				<LoadingWrapper loading={creating}>
+					<DeploymentForm
+						type="create"
+						onSubmit={handleCreateDeployment}
+					/>
+				</LoadingWrapper>
 			</Modal>
 			<button
 				className="rounded-l-full w-20 h-20 bg-gradient-to-r from-cyan-500 to-blue-500 fixed p-5 flex transition-transform duration-150 hover:-translate-x-1"
