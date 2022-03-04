@@ -1,0 +1,5 @@
+mutation UpdateSystem($id: ID!, $input: SystemUpdateInput!) {
+	systemUpdate(id: $id, input: $input) {
+		...SystemRow
+	}
+}

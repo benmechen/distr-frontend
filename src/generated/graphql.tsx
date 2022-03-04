@@ -982,6 +982,20 @@ export type DeleteSystemMutation = (
   ) }
 );
 
+export type UpdateSystemMutationVariables = Exact<{
+  id: Scalars['ID'];
+  input: SystemUpdateInput;
+}>;
+
+
+export type UpdateSystemMutation = (
+  { __typename?: 'Mutation' }
+  & { systemUpdate: (
+    { __typename?: 'System' }
+    & SystemRowFragment
+  ) }
+);
+
 export type CreateSystemMutationVariables = Exact<{
   input: SystemCreateInput;
 }>;
@@ -1419,6 +1433,17 @@ export const DeleteSystemDocument = gql`
 
 export function useDeleteSystemMutation() {
   return Urql.useMutation<DeleteSystemMutation, DeleteSystemMutationVariables>(DeleteSystemDocument);
+};
+export const UpdateSystemDocument = gql`
+    mutation UpdateSystem($id: ID!, $input: SystemUpdateInput!) {
+  systemUpdate(id: $id, input: $input) {
+    ...SystemRow
+  }
+}
+    ${SystemRowFragmentDoc}`;
+
+export function useUpdateSystemMutation() {
+  return Urql.useMutation<UpdateSystemMutation, UpdateSystemMutationVariables>(UpdateSystemDocument);
 };
 export const CreateSystemDocument = gql`
     mutation CreateSystem($input: SystemCreateInput!) {
