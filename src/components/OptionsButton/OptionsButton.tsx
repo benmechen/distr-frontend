@@ -2,7 +2,7 @@ import { DotsThree } from 'phosphor-react';
 import { gray } from 'tailwindcss/colors';
 
 interface IOptionsButton {
-	onClick?: () => void;
+	onClick?: React.MouseEventHandler<HTMLButtonElement>;
 }
 const OptionsButton = ({ onClick }: IOptionsButton) => (
 	<button onClick={onClick}>

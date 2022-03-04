@@ -1,0 +1,5 @@
+query GetServiceDetails($id: ID!) {
+	service(id: $id) {
+		...ServiceDetails
+	}
+}

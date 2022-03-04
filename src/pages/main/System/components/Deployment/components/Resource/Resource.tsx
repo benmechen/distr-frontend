@@ -14,15 +14,16 @@ export interface IResource {
 	name: string;
 	usage: IUsage;
 	status: Status;
+	deploymentId: string;
 }
 
-const Resource = ({ id, name, usage, status }: IResource) => {
+const Resource = ({ id, name, usage, status, deploymentId }: IResource) => {
 	const navigate = useNavigate();
 	const [hover, setHover] = useState(false);
 
 	return (
 		<button
-			onClick={() => navigate(`resource/${id}`)}
+			onClick={() => navigate(`${deploymentId}/resource/${id}`)}
 			onMouseEnter={() => setHover(true)}
 			onMouseLeave={() => setHover(false)}
 			className="w-full p-4 border-t border-gray-100 flex items-center justify-between gap-4"

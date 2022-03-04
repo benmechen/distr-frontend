@@ -1,5 +1,5 @@
 import { SubmitHandler, useForm } from 'react-hook-form';
-import { Button } from '../../../../../../../components/Button';
+import { Button, TertiaryButton } from '../../../../../../../components/Button';
 import { Input } from '../../../../../../../components/Input';
 
 export interface IUpdateSystemFormData {
@@ -9,9 +9,14 @@ export interface IUpdateSystemFormData {
 interface IUpdateSystemForm {
 	name?: string;
 	onSubmit: SubmitHandler<IUpdateSystemFormData>;
+	onDeleteClick?: () => void;
 }
 
-const UpdateSystemForm = ({ name, onSubmit }: IUpdateSystemForm) => {
+const UpdateSystemForm = ({
+	name,
+	onSubmit,
+	onDeleteClick,
+}: IUpdateSystemForm) => {
 	const { handleSubmit, register } = useForm<IUpdateSystemFormData>({
 		defaultValues: {
 			name,
@@ -25,6 +30,11 @@ const UpdateSystemForm = ({ name, onSubmit }: IUpdateSystemForm) => {
 				{...register('name', { required: true })}
 			/>
 			<Button>Save Changes</Button>
+			{onDeleteClick && (
+				<TertiaryButton className="mt-2" onClick={onDeleteClick}>
+					Delete System
+				</TertiaryButton>
+			)}
 		</form>
 	);
 };

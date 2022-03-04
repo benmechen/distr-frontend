@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
-import { Button } from '../../../../../../../components/Button';
+import { Button, TertiaryButton } from '../../../../../../../components/Button';
 import { Input } from '../../../../../../../components/Input';
 import { Platform as PlatformSelector } from '../../../../../../../components/Platform';
 import { Platform } from '../../../../../../../generated/graphql';
@@ -18,8 +18,14 @@ interface IDeploymentForm {
 	type: 'create' | 'update';
 	name?: string;
 	onSubmit: SubmitHandler<IDeploymentFormData>;
+	onDeleteClick?: () => void;
 }
-const DeploymentForm = ({ type, name, onSubmit }: IDeploymentForm) => {
+const DeploymentForm = ({
+	type,
+	name,
+	onSubmit,
+	onDeleteClick,
+}: IDeploymentForm) => {
 	const [platform, setPlatform] = useState<Platform>(Platform.Aws);
 	const { handleSubmit, register } = useForm<IDeploymentFormData>({
 		defaultValues: {
@@ -103,6 +109,11 @@ const DeploymentForm = ({ type, name, onSubmit }: IDeploymentForm) => {
 				<Button type="submit">Create Deployment</Button>
 			) : (
 				<Button type="submit">Save Changes</Button>
+			)}
+			{onDeleteClick && (
+				<TertiaryButton className="mt-2" onClick={onDeleteClick}>
+					Delete Deployment
+				</TertiaryButton>
 			)}
 		</form>
 	);

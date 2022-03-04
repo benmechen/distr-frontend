@@ -1,0 +1,5 @@
+mutation CreateResource($deploymentID: ID!, $input: ResourceCreateInput!) {
+	resourceCreate(deploymentID: $deploymentID, input: $input) {
+		...SingleResource
+	}
+}

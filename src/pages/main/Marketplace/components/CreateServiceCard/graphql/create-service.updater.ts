@@ -24,9 +24,8 @@ export class CreateServiceUpdater extends UpdateCacheHandler<
 		cache
 			.inspectFields('Query')
 			.filter((field) => field.fieldName === 'services')
-			.forEach((field) => {
-				console.log(field);
-				cache.invalidate('Query', field.fieldName, field.arguments);
-			});
+			.forEach((field) =>
+				cache.invalidate('Query', field.fieldName, field.arguments),
+			);
 	}
 }

@@ -10,9 +10,9 @@ import { Input } from '../Input';
 import { LoadingWrapper } from '../LoadingWrapper';
 
 interface IMarketplace {
-	selectedService?: string;
+	selectedService?: ServiceRowFragment;
 	setSelectedService: React.Dispatch<
-		React.SetStateAction<string | undefined>
+		React.SetStateAction<ServiceRowFragment | undefined>
 	>;
 	showCreate?: boolean;
 }
@@ -38,9 +38,9 @@ const Marketplace = ({
 		setServices(nodes);
 	}, [data]);
 
-	const handleServiceClick = (id: string) => {
-		if (id === selectedService) setSelectedService(undefined);
-		else setSelectedService(id);
+	const handleServiceClick = (service: ServiceRowFragment) => {
+		if (service.id === selectedService?.id) setSelectedService(undefined);
+		else setSelectedService(service);
 	};
 
 	return (
@@ -57,8 +57,9 @@ const Marketplace = ({
 					{services?.map((service) => (
 						<ServiceCard
 							{...service}
-							selected={selectedService === service.id}
-							onClick={handleServiceClick}
+							key={service.id}
+							selected={selectedService?.id === service.id}
+							onClick={() => handleServiceClick(service)}
 						/>
 					))}
 				</LoadingWrapper>

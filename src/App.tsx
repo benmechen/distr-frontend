@@ -15,12 +15,24 @@ import CreateResourceScreen from './pages/main/System/CreateResource/create-reso
 import MarketplaceScreen from './pages/main/Marketplace/marketplace.screen';
 import ResourceScreen from './pages/main/System/Resource/resource.screen';
 import { CreateServiceUpdater } from './pages/main/Marketplace/components/CreateServiceCard/graphql/create-service.updater';
+import { CreateResourceUpdater } from './pages/main/System/CreateResource/graphql/create-resource.updater';
+import { DeleteResourceUpdater } from './pages/main/System/Resource/graphql/delete-resource.updater';
+import { DeleteDeploymentUpdater } from './pages/main/System/components/Deployment/graphql/delete-deployment.updater';
+import { CreateDeploymentUpdater } from './pages/main/System/components/CreateDeploymentButton/graphql/create-deployment.updater';
+import { CreateSystemUpdater } from './pages/main/Dashboard/graphql/create-system.updater';
+import { DeleteSystemUpdater } from './pages/main/Dashboard/components/SystemCard/graphql/delete-system.updater';
 
 function App() {
 	const client = useMemo(
 		() =>
 			new ClientService(`${import.meta.env.VITE_API_URL}/graphql`, [
 				new CreateServiceUpdater(),
+				new CreateSystemUpdater(),
+				new DeleteSystemUpdater(),
+				new CreateDeploymentUpdater(),
+				new DeleteDeploymentUpdater(),
+				new CreateResourceUpdater(),
+				new DeleteResourceUpdater(),
 			]),
 		[],
 	);
@@ -65,11 +77,11 @@ function App() {
 									element={<SystemScreen />}
 								/>
 								<Route
-									path="system/:id/resource/new"
+									path="system/:systemId/:deploymentId/resource/new"
 									element={<CreateResourceScreen />}
 								/>
 								<Route
-									path="system/:systemId/resource/:id"
+									path="system/:systemId/:deploymentId/resource/:resourceId"
 									element={<ResourceScreen />}
 								/>
 								<Route

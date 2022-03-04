@@ -34,7 +34,7 @@ const DashboardScreen = () => {
 			<div className="flex flex-wrap items-center justify-center h-screen gap-4 -mt-16">
 				<CreateSystemCard />
 				{systems.map((system) => (
-					<SystemCard {...system} />
+					<SystemCard key={system.id} {...system} />
 				))}
 			</div>
 		</Layout>

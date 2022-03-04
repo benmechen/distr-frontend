@@ -46,10 +46,14 @@ const ResourceDetails = ({
 		<br />
 		<h4 className="text-lg font-semibold mb-4">Details</h4>
 		{details?.map((property) => (
-			<Property {...property} />
+			<Property key={property.name} {...property} />
 		))}
 		{fields?.map((field) => (
-			<FieldInput {...field} {...register!(field.name)} />
+			<FieldInput
+				key={field.name}
+				{...field}
+				{...register!(field.name)}
+			/>
 		))}
 	</>
 );

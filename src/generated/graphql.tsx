@@ -251,7 +251,7 @@ export type Mutation = {
   /** Delete a set of articles */
   articlesDelete: Array<Scalars['ID']>;
   deploymentCreate: Deployment;
-  deploymentDelete: Scalars['Boolean'];
+  deploymentDelete: Deployment;
   deploymentUpdate: Deployment;
   /** Get an access token using the user's email and password */
   login?: Maybe<Tokens>;
@@ -271,7 +271,7 @@ export type Mutation = {
   /** Delete a set of services */
   servicesDelete: Array<Scalars['ID']>;
   systemCreate: System;
-  systemDelete: Scalars['Boolean'];
+  systemDelete: System;
   systemUpdate: System;
   /** Sign up for an account */
   userCreate?: Maybe<UserCreateResponse>;
@@ -627,6 +627,7 @@ export type Resource = {
   id: Scalars['ID'];
   /** Resource name */
   name: Scalars['String'];
+  service: Service;
   status: Status;
   /** Date the object was last updated */
   updated: Scalars['DateTime'];
@@ -968,6 +969,19 @@ export type IsRegisteredQuery = (
   ) }
 );
 
+export type DeleteSystemMutationVariables = Exact<{
+  id: Scalars['ID'];
+}>;
+
+
+export type DeleteSystemMutation = (
+  { __typename?: 'Mutation' }
+  & { systemDelete: (
+    { __typename?: 'System' }
+    & Pick<System, 'id'>
+  ) }
+);
+
 export type CreateSystemMutationVariables = Exact<{
   input: SystemCreateInput;
 }>;
@@ -1072,6 +1086,108 @@ export type SingleServiceFragment = (
   ) }
 );
 
+export type CreateResourceMutationVariables = Exact<{
+  deploymentID: Scalars['ID'];
+  input: ResourceCreateInput;
+}>;
+
+
+export type CreateResourceMutation = (
+  { __typename?: 'Mutation' }
+  & { resourceCreate: (
+    { __typename?: 'Resource' }
+    & SingleResourceFragment
+  ) }
+);
+
+export type GetServiceDetailsQueryVariables = Exact<{
+  id: Scalars['ID'];
+}>;
+
+
+export type GetServiceDetailsQuery = (
+  { __typename?: 'Query' }
+  & { service?: Maybe<(
+    { __typename?: 'Service' }
+    & ServiceDetailsFragment
+  )> }
+);
+
+export type ServiceDetailsFragment = (
+  { __typename?: 'Service' }
+  & Pick<Service, 'id' | 'name'>
+  & { inputs: Array<(
+    { __typename?: 'Field' }
+    & SingleInputFragment
+  )> }
+);
+
+export type SingleFlatInputFragment = (
+  { __typename?: 'Field' }
+  & Pick<Field, 'name' | 'description' | 'type' | 'required'>
+  & { defaultValue?: Maybe<(
+    { __typename?: 'Value' }
+    & Pick<Value, 'boolValue' | 'numberValue' | 'stringValue'>
+  )> }
+);
+
+export type SingleInputFragment = (
+  { __typename?: 'Field' }
+  & { fields?: Maybe<Array<(
+    { __typename?: 'Field' }
+    & SingleFlatInputFragment
+  )>> }
+  & SingleFlatInputFragment
+);
+
+export type SingleResourceFragment = (
+  { __typename?: 'Resource' }
+  & Pick<Resource, 'id' | 'name' | 'status'>
+  & { usage: (
+    { __typename?: 'Usage' }
+    & Pick<Usage, 'current' | 'limit' | 'type'>
+  ), details: Array<(
+    { __typename?: 'Property' }
+    & Pick<Property, 'name'>
+    & { value?: Maybe<(
+      { __typename?: 'Value' }
+      & Pick<Value, 'stringValue' | 'boolValue' | 'numberValue'>
+    )> }
+  )>, deployment: (
+    { __typename?: 'Deployment' }
+    & Pick<Deployment, 'id' | 'name'>
+  ), service: (
+    { __typename?: 'Service' }
+    & Pick<Service, 'id' | 'name'>
+  ) }
+);
+
+export type DeleteResourceMutationVariables = Exact<{
+  id: Scalars['ID'];
+}>;
+
+
+export type DeleteResourceMutation = (
+  { __typename?: 'Mutation' }
+  & { resourceDelete: (
+    { __typename?: 'Resource' }
+    & Pick<Resource, 'id'>
+  ) }
+);
+
+export type GetResourceQueryVariables = Exact<{
+  id: Scalars['ID'];
+}>;
+
+
+export type GetResourceQuery = (
+  { __typename?: 'Query' }
+  & { resource: (
+    { __typename?: 'Resource' }
+    & SingleResourceFragment
+  ) }
+);
+
 export type CreateDeploymentMutationVariables = Exact<{
   systemID: Scalars['ID'];
   input: DeploymentCreateInput;
@@ -1083,6 +1199,19 @@ export type CreateDeploymentMutation = (
   & { deploymentCreate: (
     { __typename?: 'Deployment' }
     & SingleDeploymentFragment
+  ) }
+);
+
+export type DeleteDeploymentMutationVariables = Exact<{
+  id: Scalars['ID'];
+}>;
+
+
+export type DeleteDeploymentMutation = (
+  { __typename?: 'Mutation' }
+  & { deploymentDelete: (
+    { __typename?: 'Deployment' }
+    & Pick<Deployment, 'id'>
   ) }
 );
 
@@ -1173,6 +1302,64 @@ export const SingleServiceFragmentDoc = gql`
   }
 }
     `;
+export const SingleFlatInputFragmentDoc = gql`
+    fragment SingleFlatInput on Field {
+  name
+  defaultValue {
+    boolValue
+    numberValue
+    stringValue
+  }
+  description
+  type
+  required
+}
+    `;
+export const SingleInputFragmentDoc = gql`
+    fragment SingleInput on Field {
+  ...SingleFlatInput
+  fields {
+    ...SingleFlatInput
+  }
+}
+    ${SingleFlatInputFragmentDoc}`;
+export const ServiceDetailsFragmentDoc = gql`
+    fragment ServiceDetails on Service {
+  id
+  name
+  inputs {
+    ...SingleInput
+  }
+}
+    ${SingleInputFragmentDoc}`;
+export const SingleResourceFragmentDoc = gql`
+    fragment SingleResource on Resource {
+  id
+  name
+  status
+  usage {
+    current
+    limit
+    type
+  }
+  details {
+    name
+    value {
+      stringValue
+      boolValue
+      numberValue
+    }
+  }
+  deployment {
+    id
+    name
+  }
+  service {
+    id
+    name
+  }
+}
+    `;
 export const ResourceRowFragmentDoc = gql`
     fragment ResourceRow on Resource {
   id
@@ -1221,6 +1408,17 @@ export const IsRegisteredDocument = gql`
 
 export function useIsRegisteredQuery(options: Omit<Urql.UseQueryArgs<IsRegisteredQueryVariables>, 'query'> = {}) {
   return Urql.useQuery<IsRegisteredQuery>({ query: IsRegisteredDocument, ...options });
+};
+export const DeleteSystemDocument = gql`
+    mutation DeleteSystem($id: ID!) {
+  systemDelete(id: $id) {
+    id
+  }
+}
+    `;
+
+export function useDeleteSystemMutation() {
+  return Urql.useMutation<DeleteSystemMutation, DeleteSystemMutationVariables>(DeleteSystemDocument);
 };
 export const CreateSystemDocument = gql`
     mutation CreateSystem($input: SystemCreateInput!) {
@@ -1285,6 +1483,50 @@ export const GetServiceDocument = gql`
 export function useGetServiceQuery(options: Omit<Urql.UseQueryArgs<GetServiceQueryVariables>, 'query'> = {}) {
   return Urql.useQuery<GetServiceQuery>({ query: GetServiceDocument, ...options });
 };
+export const CreateResourceDocument = gql`
+    mutation CreateResource($deploymentID: ID!, $input: ResourceCreateInput!) {
+  resourceCreate(deploymentID: $deploymentID, input: $input) {
+    ...SingleResource
+  }
+}
+    ${SingleResourceFragmentDoc}`;
+
+export function useCreateResourceMutation() {
+  return Urql.useMutation<CreateResourceMutation, CreateResourceMutationVariables>(CreateResourceDocument);
+};
+export const GetServiceDetailsDocument = gql`
+    query GetServiceDetails($id: ID!) {
+  service(id: $id) {
+    ...ServiceDetails
+  }
+}
+    ${ServiceDetailsFragmentDoc}`;
+
+export function useGetServiceDetailsQuery(options: Omit<Urql.UseQueryArgs<GetServiceDetailsQueryVariables>, 'query'> = {}) {
+  return Urql.useQuery<GetServiceDetailsQuery>({ query: GetServiceDetailsDocument, ...options });
+};
+export const DeleteResourceDocument = gql`
+    mutation DeleteResource($id: ID!) {
+  resourceDelete(id: $id) {
+    id
+  }
+}
+    `;
+
+export function useDeleteResourceMutation() {
+  return Urql.useMutation<DeleteResourceMutation, DeleteResourceMutationVariables>(DeleteResourceDocument);
+};
+export const GetResourceDocument = gql`
+    query GetResource($id: ID!) {
+  resource(id: $id) {
+    ...SingleResource
+  }
+}
+    ${SingleResourceFragmentDoc}`;
+
+export function useGetResourceQuery(options: Omit<Urql.UseQueryArgs<GetResourceQueryVariables>, 'query'> = {}) {
+  return Urql.useQuery<GetResourceQuery>({ query: GetResourceDocument, ...options });
+};
 export const CreateDeploymentDocument = gql`
     mutation CreateDeployment($systemID: ID!, $input: DeploymentCreateInput!) {
   deploymentCreate(systemID: $systemID, input: $input) {
@@ -1295,6 +1537,17 @@ export const CreateDeploymentDocument = gql`
 
 export function useCreateDeploymentMutation() {
   return Urql.useMutation<CreateDeploymentMutation, CreateDeploymentMutationVariables>(CreateDeploymentDocument);
+};
+export const DeleteDeploymentDocument = gql`
+    mutation DeleteDeployment($id: ID!) {
+  deploymentDelete(id: $id) {
+    id
+  }
+}
+    `;
+
+export function useDeleteDeploymentMutation() {
+  return Urql.useMutation<DeleteDeploymentMutation, DeleteDeploymentMutationVariables>(DeleteDeploymentDocument);
 };
 export const GetDeploymentsForSystemDocument = gql`
     query GetDeploymentsForSystem($id: ID!) {
