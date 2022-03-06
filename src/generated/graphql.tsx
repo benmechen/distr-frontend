@@ -223,6 +223,15 @@ export type Input = {
 };
 
 
+/** Service methods */
+export enum Method {
+  Create = 'CREATE',
+  Delete = 'DELETE',
+  Get = 'GET',
+  Unrecognized = 'UNRECOGNIZED',
+  Update = 'UPDATE'
+}
+
 export type Mutation = {
   __typename?: 'Mutation';
   /** Admin function to create a new user */
@@ -684,6 +693,12 @@ export type Service = {
   verified: Scalars['Boolean'];
 };
 
+
+/** Service model */
+export type ServiceInputsArgs = {
+  method: Method;
+};
+
 /** Paginated list of services */
 export type ServiceConnection = {
   __typename?: 'ServiceConnection';
@@ -1129,13 +1144,27 @@ export type GetServiceDetailsQuery = (
   )> }
 );
 
+export type GetServiceInputsQueryVariables = Exact<{
+  id: Scalars['ID'];
+  method: Method;
+}>;
+
+
+export type GetServiceInputsQuery = (
+  { __typename?: 'Query' }
+  & { service?: Maybe<(
+    { __typename?: 'Service' }
+    & { inputs: Array<(
+      { __typename?: 'Field' }
+      & SingleInputFragment
+    )> }
+    & ServiceDetailsFragment
+  )> }
+);
+
 export type ServiceDetailsFragment = (
   { __typename?: 'Service' }
   & Pick<Service, 'id' | 'name'>
-  & { inputs: Array<(
-    { __typename?: 'Field' }
-    & SingleInputFragment
-  )> }
 );
 
 export type SingleFlatInputFragment = (
@@ -1373,11 +1402,8 @@ export const ServiceDetailsFragmentDoc = gql`
     fragment ServiceDetails on Service {
   id
   name
-  inputs {
-    ...SingleInput
-  }
 }
-    ${SingleInputFragmentDoc}`;
+    `;
 export const SingleResourceFragmentDoc = gql`
     fragment SingleResource on Resource {
   id
@@ -1560,6 +1586,21 @@ export const GetServiceDetailsDocument = gql`
 
 export function useGetServiceDetailsQuery(options: Omit<Urql.UseQueryArgs<GetServiceDetailsQueryVariables>, 'query'> = {}) {
   return Urql.useQuery<GetServiceDetailsQuery>({ query: GetServiceDetailsDocument, ...options });
+};
+export const GetServiceInputsDocument = gql`
+    query GetServiceInputs($id: ID!, $method: Method!) {
+  service(id: $id) {
+    ...ServiceDetails
+    inputs(method: $method) {
+      ...SingleInput
+    }
+  }
+}
+    ${ServiceDetailsFragmentDoc}
+${SingleInputFragmentDoc}`;
+
+export function useGetServiceInputsQuery(options: Omit<Urql.UseQueryArgs<GetServiceInputsQueryVariables>, 'query'> = {}) {
+  return Urql.useQuery<GetServiceInputsQuery>({ query: GetServiceInputsDocument, ...options });
 };
 export const DeleteResourceDocument = gql`
     mutation DeleteResource($id: ID!) {

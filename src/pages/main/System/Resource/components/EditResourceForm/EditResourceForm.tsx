@@ -1,18 +1,29 @@
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { Button } from '../../../../../../components/Button';
-import { Field, Property } from '../../../../../../generated/graphql';
+import {
+	Method,
+	Property,
+	useGetServiceInputsQuery,
+} from '../../../../../../generated/graphql';
 import { Field as FieldInput } from '../../../CreateResource/components/Field';
 
 interface IEditResourceForm {
-	inputs: Field[];
+	serviceId: string;
 	details?: Property[];
 	handleUpdate: SubmitHandler<any>;
 }
 const EditResourceForm = ({
-	inputs,
+	serviceId,
 	details,
 	handleUpdate,
 }: IEditResourceForm) => {
+	const [{ data }] = useGetServiceInputsQuery({
+		variables: {
+			id: serviceId,
+			method: Method.Update,
+		},
+	});
+
 	const getDefaultValues = (details?: Property[]) => {
 		const defaultValues: Record<string, any> = {};
 
@@ -33,7 +44,7 @@ const EditResourceForm = ({
 
 	return (
 		<form className="w-full">
-			{inputs.map((field, i) => (
+			{data?.service?.inputs.map((field, i) => (
 				<FieldInput
 					key={field.name}
 					className={i > 0 ? 'mt-4' : ''}

@@ -15,6 +15,7 @@ import {
 	useGetResourceQuery,
 	useUpdateResourceMutation,
 } from '../../../../generated/graphql';
+import { transformInputs } from '../../../../utils/helper.service';
 import { Layout } from '../../Layout';
 import { ServiceSideBar } from '../CreateResource/components/ServiceSideBar';
 import { EditResourceForm } from './components/EditResourceForm';
@@ -29,8 +30,10 @@ const ResourceScreen = () => {
 	const { register } = useForm();
 	const [DeleteModal, { open: openDeleteModal, close: closeDeleteModal }] =
 		useModal();
-	const [EditModal, { open: openEditModal, close: closeEditModal }] =
-		useModal();
+	const [
+		EditModal,
+		{ open: openEditModal, close: closeEditModal, isOpen: editModalOpen },
+	] = useModal();
 	const [RenameModal, { open: openRenameModal, close: closeRenameModal }] =
 		useModal();
 	const [nameHover, setNameHover] = useState(false);
@@ -40,6 +43,7 @@ const ResourceScreen = () => {
 			id: resourceId ?? '',
 		},
 	});
+
 	const [{ fetching: updating }, updateResource] =
 		useUpdateResourceMutation();
 	const [{ fetching: deleting }, deleteResource] =
@@ -47,6 +51,12 @@ const ResourceScreen = () => {
 
 	const handleUpdate = async (data: Record<string, any>) => {
 		if (!resourceId) return;
+		await updateResource({
+			id: resourceId,
+			input: {
+				input: transformInputs(data),
+			},
+		});
 		closeEditModal();
 	};
 
@@ -77,17 +87,15 @@ const ResourceScreen = () => {
 				</Button>
 				<SecondaryButton onClick={handleDelete}>Delete</SecondaryButton>
 			</DeleteModal>
-			{data?.resource.service.inputs && (
-				<EditModal title="Edit Resource">
-					<LoadingWrapper loading={false}>
-						<EditResourceForm
-							inputs={data?.resource.service.inputs}
-							details={data?.resource.details}
-							handleUpdate={handleUpdate}
-						/>
-					</LoadingWrapper>
-				</EditModal>
-			)}
+			<EditModal title="Edit Resource">
+				<LoadingWrapper loading={updating}>
+					<EditResourceForm
+						serviceId={data?.resource.service.id ?? ''}
+						details={data?.resource.details}
+						handleUpdate={handleUpdate}
+					/>
+				</LoadingWrapper>
+			</EditModal>
 			<RenameModal title="Rename Resource">
 				<LoadingWrapper loading={updating}>
 					<RenameResourceForm

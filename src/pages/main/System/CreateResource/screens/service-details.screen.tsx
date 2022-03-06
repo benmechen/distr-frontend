@@ -2,8 +2,10 @@ import { useForm } from 'react-hook-form';
 import { Button } from '../../../../../components/Button';
 import { LoadingWrapper } from '../../../../../components/LoadingWrapper';
 import {
+	Method,
 	useCreateResourceMutation,
 	useGetServiceDetailsQuery,
+	useGetServiceInputsQuery,
 } from '../../../../../generated/graphql';
 import { transformInputs } from '../../../../../utils/helper.service';
 import { Field as FieldInput } from '../components/Field';
@@ -29,6 +31,13 @@ const ServiceDetailsScreen = ({
 			id: service.id,
 		},
 	});
+	const [{ data: inputsData, fetching: fetchingInputs }] =
+		useGetServiceInputsQuery({
+			variables: {
+				id: service.id,
+				method: Method.Create,
+			},
+		});
 
 	const { handleSubmit, register } = useForm();
 
@@ -56,7 +65,7 @@ const ServiceDetailsScreen = ({
 							Fill out the details below.
 						</p>
 						<form className="w-full md:w-1/2 lg:2/5 mt-6">
-							{data?.service?.inputs.map((field) => (
+							{inputsData?.service?.inputs.map((field) => (
 								<FieldInput
 									key={field.name}
 									className="mt-4"

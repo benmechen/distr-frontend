@@ -6,6 +6,7 @@ import { ResourceDetails } from '../../../../../components/ResourceDetails';
 import {
 	UsageType,
 	useGetResourceQuery,
+	useUpdateResourceMutation,
 } from '../../../../../generated/graphql';
 import { ServiceSideBar } from '../components/ServiceSideBar';
 
@@ -15,7 +16,7 @@ interface IResourceDetailsData {
 
 interface IResourceDetailsScreen {
 	id: string;
-	next: () => void;
+	next: (id: string) => void;
 }
 const ResourceDetailsScreen = ({ id, next }: IResourceDetailsScreen) => {
 	const [{ data, fetching }] = useGetResourceQuery({
@@ -23,15 +24,21 @@ const ResourceDetailsScreen = ({ id, next }: IResourceDetailsScreen) => {
 			id,
 		},
 	});
+	const [{ fetching: updating }, updateResource] =
+		useUpdateResourceMutation();
 
 	const { handleSubmit, register } = useForm<IResourceDetailsData>();
 
-	const handleCreate = () => {
-		next();
+	const handleRename = async (data: IResourceDetailsData) => {
+		await updateResource({
+			id,
+			input: data,
+		});
+		next(id);
 	};
 
 	return (
-		<LoadingWrapper loading={fetching}>
+		<LoadingWrapper loading={fetching || updating}>
 			<div className="flex justify-end flex-col md:flex-row">
 				<div className="w-full p-4 flex flex-col items-start max-h-full">
 					<div className="w-full md:w-1/2 lg:2/5 max-h-full">
@@ -49,7 +56,7 @@ const ResourceDetailsScreen = ({ id, next }: IResourceDetailsScreen) => {
 								{...register('name')}
 							/>
 							<Button
-								onClick={handleSubmit(handleCreate)}
+								onClick={handleSubmit(handleRename)}
 								className="mt-4 w-full"
 							>
 								Save Resource
