@@ -3,7 +3,10 @@ import { Button } from '../../../../../components/Button';
 import { Input } from '../../../../../components/Input';
 import { LoadingWrapper } from '../../../../../components/LoadingWrapper';
 import { ResourceDetails } from '../../../../../components/ResourceDetails';
-import { Limit, useGetResourceQuery } from '../../../../../generated/graphql';
+import {
+	UsageType,
+	useGetResourceQuery,
+} from '../../../../../generated/graphql';
 import { ServiceSideBar } from '../components/ServiceSideBar';
 
 interface IResourceDetailsData {
@@ -57,7 +60,8 @@ const ResourceDetailsScreen = ({ id, next }: IResourceDetailsScreen) => {
 							<ResourceDetails
 								{...data.resource}
 								usage={
-									data.resource.usage.type === Limit.Limited
+									data.resource.usage?.type ===
+									UsageType.Limited
 										? {
 												current:
 													data.resource.usage

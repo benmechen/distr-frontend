@@ -5,6 +5,8 @@ fragment SingleService on Service {
 	verified
 	description
 	platform
+	documentationURL
+	sourceCodeURL
 	author {
 		name
 	}

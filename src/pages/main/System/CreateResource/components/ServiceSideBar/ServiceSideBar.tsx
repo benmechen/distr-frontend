@@ -15,21 +15,9 @@ const ServiceSideBar = ({ id, children }: IServiceSideBar) => {
 		},
 	});
 
-	const service = {
-		name: 'S3',
-		verified: true,
-		description: '',
-		platform: Platform.Aws,
-		author: {
-			id: '123',
-			name: 'Chelsea Apps',
-		},
-		source: 'https://github.com/',
-		documentation: 'https://docs.aws.amazon.com/AmazonS3/',
-	};
 	if (!data?.service) return <></>;
 	return (
-		<div className="w-full md:w-1/3 bg-white shadow-lg h-screen p-4 pt-20">
+		<div className="w-full md:w-1/3 bg-white shadow-lg h-screen p-4">
 			<h2 className="font-bold text-2xl">{data.service.name}</h2>
 			{data.service.verified && <VerifiedBadge />}
 			<p className="mt-6 font-light leading-6">{data.service.summary}</p>
@@ -49,11 +37,15 @@ const ServiceSideBar = ({ id, children }: IServiceSideBar) => {
 			</p>
 			<p className="font-light">
 				<span className="font-semibold">Source Code:</span>
-				<span className="ml-2 underline">{service.source}</span>
+				<span className="ml-2 underline">
+					{data.service.sourceCodeURL}
+				</span>
 			</p>
 			<p className="font-light">
 				<span className="font-semibold">Docs:</span>
-				<span className="ml-2 underline">{service.documentation}</span>
+				<span className="ml-2 underline">
+					{data.service.documentationURL}
+				</span>
 			</p>
 			{children}
 		</div>

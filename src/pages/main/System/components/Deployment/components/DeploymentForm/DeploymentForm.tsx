@@ -69,39 +69,49 @@ const DeploymentForm = ({
 				<>
 					<Input
 						placeholder="Access Key ID"
-						{...register('aws_id', { required: true })}
+						{...register('aws_id', { required: type === 'create' })}
 					/>
 					<Input
 						placeholder="Access Key Secret"
 						type="password"
-						{...register('aws_secret', { required: true })}
+						{...register('aws_secret', {
+							required: type === 'create',
+						})}
 					/>
 					<Input
 						placeholder="Region (eu-west-2)"
-						{...register('aws_region', { required: true })}
+						{...register('aws_region', {
+							required: type === 'create',
+						})}
 					/>
 				</>
 			) : platform === Platform.Azure ? (
 				<>
 					<Input
 						placeholder="Tenant ID"
-						{...register('azure_tenantId', { required: true })}
+						{...register('azure_tenantId', {
+							required: type === 'create',
+						})}
 					/>
 					<Input
 						placeholder="Client ID"
-						{...register('azure_clientId', { required: true })}
+						{...register('azure_clientId', {
+							required: type === 'create',
+						})}
 					/>
 					<Input
 						placeholder="Secret"
 						type="password"
-						{...register('azure_secret', { required: true })}
+						{...register('azure_secret', {
+							required: type === 'create',
+						})}
 					/>
 				</>
 			) : (
 				<>
 					<Input
 						placeholder="Credential"
-						{...register('aws_id', { required: true })}
+						{...register('aws_id', { required: type === 'create' })}
 					/>
 				</>
 			)}

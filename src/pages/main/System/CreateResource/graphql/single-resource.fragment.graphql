@@ -20,7 +20,6 @@ fragment SingleResource on Resource {
 		name
 	}
 	service {
-		id
-		name
+		...ServiceDetails
 	}
 }

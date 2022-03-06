@@ -1,12 +1,14 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Marketplace } from '../../../components/Marketplace';
+import { ServiceRowFragment } from '../../../generated/graphql';
 import { Layout } from '../Layout';
 import { ServiceSideBar } from '../System/CreateResource/components/ServiceSideBar';
 
 const MarketplaceScreen = () => {
 	const navigate = useNavigate();
-	const [selectedService, setSelectedService] = useState<string>();
+	const [selectedService, setSelectedService] =
+		useState<ServiceRowFragment>();
 
 	return (
 		<Layout
@@ -26,7 +28,7 @@ const MarketplaceScreen = () => {
 					</div>
 				</div>
 				{selectedService ? (
-					<ServiceSideBar id={selectedService} />
+					<ServiceSideBar id={selectedService.id} />
 				) : (
 					<div className="w-full md:w-1/3"></div>
 				)}

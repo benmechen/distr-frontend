@@ -223,11 +223,6 @@ export type Input = {
 };
 
 
-export enum Limit {
-  Limited = 'LIMITED',
-  Unlimited = 'UNLIMITED'
-}
-
 export type Mutation = {
   __typename?: 'Mutation';
   /** Admin function to create a new user */
@@ -631,7 +626,7 @@ export type Resource = {
   status: Status;
   /** Date the object was last updated */
   updated: Scalars['DateTime'];
-  usage: Usage;
+  usage?: Maybe<Usage>;
 };
 
 export type ResourceCreateInput = {
@@ -811,8 +806,15 @@ export type Usage = {
   __typename?: 'Usage';
   current?: Maybe<Scalars['Float']>;
   limit?: Maybe<Scalars['Float']>;
-  type: Limit;
+  type: UsageType;
 };
+
+/** Usage type */
+export enum UsageType {
+  Limited = 'LIMITED',
+  Unlimited = 'UNLIMITED',
+  Unrecognized = 'UNRECOGNIZED'
+}
 
 /** User (customer and staff) model */
 export type User = {
@@ -1093,7 +1095,7 @@ export type GetServiceQuery = (
 
 export type SingleServiceFragment = (
   { __typename?: 'Service' }
-  & Pick<Service, 'id' | 'name' | 'summary' | 'verified' | 'description' | 'platform'>
+  & Pick<Service, 'id' | 'name' | 'summary' | 'verified' | 'description' | 'platform' | 'documentationURL' | 'sourceCodeURL'>
   & { author: (
     { __typename?: 'Organisation' }
     & Pick<Organisation, 'name'>
@@ -1157,10 +1159,10 @@ export type SingleInputFragment = (
 export type SingleResourceFragment = (
   { __typename?: 'Resource' }
   & Pick<Resource, 'id' | 'name' | 'status'>
-  & { usage: (
+  & { usage?: Maybe<(
     { __typename?: 'Usage' }
     & Pick<Usage, 'current' | 'limit' | 'type'>
-  ), details: Array<(
+  )>, details: Array<(
     { __typename?: 'Property' }
     & Pick<Property, 'name'>
     & { value?: Maybe<(
@@ -1172,7 +1174,7 @@ export type SingleResourceFragment = (
     & Pick<Deployment, 'id' | 'name'>
   ), service: (
     { __typename?: 'Service' }
-    & Pick<Service, 'id' | 'name'>
+    & ServiceDetailsFragment
   ) }
 );
 
@@ -1197,6 +1199,20 @@ export type GetResourceQueryVariables = Exact<{
 export type GetResourceQuery = (
   { __typename?: 'Query' }
   & { resource: (
+    { __typename?: 'Resource' }
+    & SingleResourceFragment
+  ) }
+);
+
+export type UpdateResourceMutationVariables = Exact<{
+  id: Scalars['ID'];
+  input: ResourceUpdateInput;
+}>;
+
+
+export type UpdateResourceMutation = (
+  { __typename?: 'Mutation' }
+  & { resourceUpdate: (
     { __typename?: 'Resource' }
     & SingleResourceFragment
   ) }
@@ -1229,13 +1245,27 @@ export type DeleteDeploymentMutation = (
   ) }
 );
 
+export type UpdateDeploymentMutationVariables = Exact<{
+  id: Scalars['ID'];
+  input: DeploymentUpdateInput;
+}>;
+
+
+export type UpdateDeploymentMutation = (
+  { __typename?: 'Mutation' }
+  & { deploymentUpdate: (
+    { __typename?: 'Deployment' }
+    & SingleDeploymentFragment
+  ) }
+);
+
 export type ResourceRowFragment = (
   { __typename?: 'Resource' }
   & Pick<Resource, 'id' | 'name' | 'status'>
-  & { usage: (
+  & { usage?: Maybe<(
     { __typename?: 'Usage' }
     & Pick<Usage, 'type' | 'limit' | 'current'>
-  ) }
+  )> }
 );
 
 export type SingleDeploymentFragment = (
@@ -1311,6 +1341,8 @@ export const SingleServiceFragmentDoc = gql`
   verified
   description
   platform
+  documentationURL
+  sourceCodeURL
   author {
     name
   }
@@ -1369,11 +1401,10 @@ export const SingleResourceFragmentDoc = gql`
     name
   }
   service {
-    id
-    name
+    ...ServiceDetails
   }
 }
-    `;
+    ${ServiceDetailsFragmentDoc}`;
 export const ResourceRowFragmentDoc = gql`
     fragment ResourceRow on Resource {
   id
@@ -1552,6 +1583,17 @@ export const GetResourceDocument = gql`
 export function useGetResourceQuery(options: Omit<Urql.UseQueryArgs<GetResourceQueryVariables>, 'query'> = {}) {
   return Urql.useQuery<GetResourceQuery>({ query: GetResourceDocument, ...options });
 };
+export const UpdateResourceDocument = gql`
+    mutation UpdateResource($id: ID!, $input: ResourceUpdateInput!) {
+  resourceUpdate(id: $id, input: $input) {
+    ...SingleResource
+  }
+}
+    ${SingleResourceFragmentDoc}`;
+
+export function useUpdateResourceMutation() {
+  return Urql.useMutation<UpdateResourceMutation, UpdateResourceMutationVariables>(UpdateResourceDocument);
+};
 export const CreateDeploymentDocument = gql`
     mutation CreateDeployment($systemID: ID!, $input: DeploymentCreateInput!) {
   deploymentCreate(systemID: $systemID, input: $input) {
@@ -1573,6 +1615,17 @@ export const DeleteDeploymentDocument = gql`
 
 export function useDeleteDeploymentMutation() {
   return Urql.useMutation<DeleteDeploymentMutation, DeleteDeploymentMutationVariables>(DeleteDeploymentDocument);
+};
+export const UpdateDeploymentDocument = gql`
+    mutation UpdateDeployment($id: ID!, $input: DeploymentUpdateInput!) {
+  deploymentUpdate(id: $id, input: $input) {
+    ...SingleDeployment
+  }
+}
+    ${SingleDeploymentFragmentDoc}`;
+
+export function useUpdateDeploymentMutation() {
+  return Urql.useMutation<UpdateDeploymentMutation, UpdateDeploymentMutationVariables>(UpdateDeploymentDocument);
 };
 export const GetDeploymentsForSystemDocument = gql`
     query GetDeploymentsForSystem($id: ID!) {

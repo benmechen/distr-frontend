@@ -1,0 +1,5 @@
+mutation UpdateDeployment($id: ID!, $input: DeploymentUpdateInput!) {
+	deploymentUpdate(id: $id, input: $input) {
+		...SingleDeployment
+	}
+}
