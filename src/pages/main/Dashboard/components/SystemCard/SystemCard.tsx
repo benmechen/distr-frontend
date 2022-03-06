@@ -5,10 +5,13 @@ import { Card } from '../Card';
 import { Deployment } from './components/Deployment';
 import { StatusHeader } from '../../../../../components/StatusHeader';
 import { UpdateSystemForm } from './components/UpdateSystemForm';
-import { useDeleteSystemMutation } from '../../../../../generated/graphql';
-import { Loading } from '../../../../../components/Loading';
+import {
+	useDeleteSystemMutation,
+	useUpdateSystemMutation,
+} from '../../../../../generated/graphql';
 import { LoadingWrapper } from '../../../../../components/LoadingWrapper';
 import { Button, SecondaryButton } from '../../../../../components/Button';
+import { IUpdateSystemFormData } from './components/UpdateSystemForm/UpdateSystemForm';
 
 export interface ISystemCard {
 	id: string;
@@ -30,7 +33,16 @@ const SystemCard = ({ id, name, status, deployments }: ISystemCard) => {
 	const [DeleteModal, { open: openDeleteModal, close: closeDeleteModal }] =
 		useModal();
 
+	const [{ fetching: updating }, updateSystem] = useUpdateSystemMutation();
 	const [{ fetching: deleting }, deleteSystem] = useDeleteSystemMutation();
+
+	const handleUpdate = async (data: IUpdateSystemFormData) => {
+		await updateSystem({
+			id,
+			input: data,
+		});
+		closeEditModal();
+	};
 
 	const handleDelete = async () => {
 		await deleteSystem({
@@ -56,10 +68,10 @@ const SystemCard = ({ id, name, status, deployments }: ISystemCard) => {
 			</DeleteModal>
 
 			<EditModal title={name}>
-				<LoadingWrapper loading={deleting}>
+				<LoadingWrapper loading={updating}>
 					<UpdateSystemForm
 						name={name}
-						onSubmit={() => {}}
+						onSubmit={handleUpdate}
 						onDeleteClick={() => {
 							closeEditModal();
 							openDeleteModal();

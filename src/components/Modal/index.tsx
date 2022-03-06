@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 import Modal, { IModal } from './Modal';
 
 const useModal = (): [
@@ -12,13 +12,13 @@ const useModal = (): [
 ] => {
 	const [isOpen, setOpen] = useState(false);
 
-	const open = () => {
+	const open = useCallback(() => {
 		setOpen(true);
-	};
+	}, []);
 
-	const close = () => {
+	const close = useCallback(() => {
 		setOpen(false);
-	};
+	}, []);
 
 	const ModalComponent = (props: Omit<IModal, 'open' | 'close'>) => (
 		<Modal {...props} open={isOpen} close={close} />

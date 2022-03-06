@@ -7,7 +7,11 @@ interface IStatus {
 }
 
 const StatusHeader = ({ healthy, unhealthy }: IStatus) => (
-	<div className="flex items-center py-2">
+	<div
+		className={`flex items-center py-2 ${
+			healthy + unhealthy === 0 && 'opacity-0'
+		}`}
+	>
 		<StatusIndicator
 			status={
 				unhealthy === 0

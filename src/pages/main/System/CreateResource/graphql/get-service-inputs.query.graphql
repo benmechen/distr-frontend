@@ -1,0 +1,8 @@
+query GetServiceInputs($id: ID!, $method: Method!) {
+	service(id: $id) {
+		...ServiceDetails
+		inputs(method: $method) {
+			...SingleInput
+		}
+	}
+}

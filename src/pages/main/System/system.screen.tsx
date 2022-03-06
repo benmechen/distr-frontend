@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
+import { LoadingWrapper } from '../../../components/LoadingWrapper';
 import {
 	SingleDeploymentFragment,
 	Status,
@@ -17,7 +18,7 @@ const SystemScreen = () => {
 	const [deployments, setDeployments] =
 		useState<SingleDeploymentFragment[]>();
 
-	const [{ data }] = useGetDeploymentsForSystemQuery({
+	const [{ data, fetching }] = useGetDeploymentsForSystemQuery({
 		variables: {
 			id: id ?? '',
 		},
@@ -39,9 +40,11 @@ const SystemScreen = () => {
 		>
 			<div className="w-screen h-screen p-14 pb-44 pt-28 flex items-center justify-center gap-14">
 				<CreateDeploymentButton systemID={id!} />
-				{deployments?.map((deployment) => (
-					<Deployment key={deployment.id} {...deployment} />
-				))}
+				<LoadingWrapper loading={fetching}>
+					{deployments?.map((deployment) => (
+						<Deployment key={deployment.id} {...deployment} />
+					))}
+				</LoadingWrapper>
 			</div>
 		</Layout>
 	);

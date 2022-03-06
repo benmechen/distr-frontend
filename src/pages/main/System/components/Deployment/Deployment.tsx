@@ -4,11 +4,16 @@ import { useModal } from '../../../../../components/Modal';
 import { OptionsButton } from '../../../../../components/OptionsButton';
 import { StatusHeader } from '../../../../../components/StatusHeader';
 import {
+	DeploymentCredentialsInput,
 	ResourceRowFragment,
 	useDeleteDeploymentMutation,
+	useUpdateDeploymentMutation,
 } from '../../../../../generated/graphql';
 import { CreateResourceButton } from './components/CreateResourceButton';
-import { DeploymentForm } from './components/DeploymentForm';
+import {
+	DeploymentForm,
+	IDeploymentFormData,
+} from './components/DeploymentForm';
 import { Resource } from './components/Resource';
 
 export interface IDeployment {
@@ -27,8 +32,35 @@ const Deployment = ({ id, name, status, resources }: IDeployment) => {
 	const [DeleteModal, { open: openDeleteModal, close: closeDeleteModal }] =
 		useModal();
 
+	const [{ fetching: editing }, updateDeployment] =
+		useUpdateDeploymentMutation();
 	const [{ fetching: deleting }, deleteDeployment] =
 		useDeleteDeploymentMutation();
+
+	const handleUpdate = async (data: IDeploymentFormData) => {
+		const credentials: DeploymentCredentialsInput = {};
+		if (data.aws_id && data.aws_secret && data.aws_region)
+			credentials.aws = {
+				id: data.aws_id,
+				secret: data.aws_secret,
+				region: data.aws_region,
+			};
+		if (data.azure_clientId && data.azure_tenantId && data.azure_secret)
+			credentials.azure = {
+				clientId: data.azure_clientId,
+				tenantId: data.azure_tenantId,
+				secret: data.azure_secret,
+			};
+
+		await updateDeployment({
+			id,
+			input: {
+				name: data.name,
+				credentials,
+			},
+		});
+		closeEditModal();
+	};
 
 	const handleDelete = async () => {
 		await deleteDeployment({
@@ -51,15 +83,17 @@ const Deployment = ({ id, name, status, resources }: IDeployment) => {
 				</LoadingWrapper>
 			</DeleteModal>
 			<EditModal title={name}>
-				<DeploymentForm
-					type="update"
-					name={name}
-					onSubmit={() => {}}
-					onDeleteClick={() => {
-						closeEditModal();
-						openDeleteModal();
-					}}
-				/>
+				<LoadingWrapper loading={editing}>
+					<DeploymentForm
+						type="update"
+						name={name}
+						onSubmit={handleUpdate}
+						onDeleteClick={() => {
+							closeEditModal();
+							openDeleteModal();
+						}}
+					/>
+				</LoadingWrapper>
 			</EditModal>
 			<div className="no-scrollbar w-112 pt-4 h-full overflow-y-scroll bg-white rounded-lg shadow-md flex flex-col justify-start items-center gap-6">
 				<div className="flex w-full justify-between items-start px-4">

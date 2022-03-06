@@ -2,9 +2,9 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { StatusIndicator } from '../../../../../../../components/StatusIndicator';
 import {
-	Limit,
 	Status,
 	Usage as IUsage,
+	UsageType,
 } from '../../../../../../../generated/graphql';
 import { Usage } from './components/Usage';
 import { View } from './components/View';
@@ -12,7 +12,7 @@ import { View } from './components/View';
 export interface IResource {
 	id: string;
 	name: string;
-	usage: IUsage;
+	usage?: IUsage | null;
 	status: Status;
 	deploymentId: string;
 }
@@ -31,7 +31,7 @@ const Resource = ({ id, name, usage, status, deploymentId }: IResource) => {
 			<h3 className="text-xl font-light w-1/3 text-left overflow-hidden text-ellipsis">
 				{name}
 			</h3>
-			{usage.type === Limit.Limited ? (
+			{usage?.type === UsageType.Limited ? (
 				<Usage
 					type="limited"
 					current={usage.current ?? 0}

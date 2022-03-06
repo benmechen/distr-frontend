@@ -1,7 +1,4 @@
 fragment ServiceDetails on Service {
 	id
 	name
-	inputs {
-		...SingleInput
-	}
 }
