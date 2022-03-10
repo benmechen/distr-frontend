@@ -264,7 +264,7 @@ export type Mutation = {
   /** Get a new access token from a valid refresh token */
   refresh?: Maybe<Tokens>;
   requestCode: Scalars['Boolean'];
-  resourceCreate: Resource;
+  resourceCreate: ResourceCreateResponse;
   resourceDelete: Resource;
   resourceUpdate: Resource;
   serviceCreate: Service;
@@ -645,6 +645,12 @@ export type ResourceCreateInput = {
   name: Scalars['String'];
   /** ID of the service to create from */
   serviceID: Scalars['ID'];
+};
+
+export type ResourceCreateResponse = {
+  __typename?: 'ResourceCreateResponse';
+  details: Array<Property>;
+  resource: Resource;
 };
 
 export type ResourceEdge = {
@@ -1126,8 +1132,28 @@ export type CreateResourceMutationVariables = Exact<{
 export type CreateResourceMutation = (
   { __typename?: 'Mutation' }
   & { resourceCreate: (
-    { __typename?: 'Resource' }
-    & SingleResourceFragment
+    { __typename?: 'ResourceCreateResponse' }
+    & { resource: (
+      { __typename?: 'Resource' }
+      & Pick<Resource, 'id' | 'name' | 'status'>
+      & { usage?: Maybe<(
+        { __typename?: 'Usage' }
+        & Pick<Usage, 'current' | 'limit' | 'type'>
+      )>, deployment: (
+        { __typename?: 'Deployment' }
+        & Pick<Deployment, 'id' | 'name'>
+      ), service: (
+        { __typename?: 'Service' }
+        & ServiceDetailsFragment
+      ) }
+    ), details: Array<(
+      { __typename?: 'Property' }
+      & Pick<Property, 'name'>
+      & { value?: Maybe<(
+        { __typename?: 'Value' }
+        & Pick<Value, 'stringValue' | 'boolValue' | 'numberValue'>
+      )> }
+    )> }
   ) }
 );
 
@@ -1568,10 +1594,34 @@ export function useGetServiceQuery(options: Omit<Urql.UseQueryArgs<GetServiceQue
 export const CreateResourceDocument = gql`
     mutation CreateResource($deploymentID: ID!, $input: ResourceCreateInput!) {
   resourceCreate(deploymentID: $deploymentID, input: $input) {
-    ...SingleResource
+    resource {
+      id
+      name
+      status
+      usage {
+        current
+        limit
+        type
+      }
+      deployment {
+        id
+        name
+      }
+      service {
+        ...ServiceDetails
+      }
+    }
+    details {
+      name
+      value {
+        stringValue
+        boolValue
+        numberValue
+      }
+    }
   }
 }
-    ${SingleResourceFragmentDoc}`;
+    ${ServiceDetailsFragmentDoc}`;
 
 export function useCreateResourceMutation() {
   return Urql.useMutation<CreateResourceMutation, CreateResourceMutationVariables>(CreateResourceDocument);

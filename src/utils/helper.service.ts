@@ -17,17 +17,29 @@ export const getNodesFromEdges = <T>(edges?: { node: T }[] | null): T[] =>
  * @returns Inputs
  */
 export const transformInputs = (data: Record<string, any>): Input[] =>
-	Object.entries(data).map(([key, value]) => ({
-		name: key,
-		value: {
-			boolValue: typeof value === 'boolean' ? value : undefined,
-			stringValue: typeof value === 'string' ? value : undefined,
-			numberValue: typeof value === 'number' ? value : undefined,
-			structValue:
-				typeof value === 'object'
-					? {
-							fields: value,
-					  }
-					: undefined,
-		},
-	}));
+	Object.entries(data).map(([key, value]) => {
+		let boolValue: boolean | undefined = undefined;
+		let stringValue: string | undefined = undefined;
+		let numberValue: number | undefined = undefined;
+		let structValue: { fields: any } | undefined = undefined;
+
+		if (typeof value === 'boolean') boolValue = value;
+		else if (!Number.isNaN(value) && !Number.isNaN(parseFloat(value)))
+			numberValue = Number(value);
+		else if (typeof value === 'object') structValue = { fields: value };
+		else if (typeof value === 'string' && value.trim().length > 0)
+			stringValue = value;
+
+		return {
+			name: key,
+			value: {
+				boolValue,
+				stringValue,
+				numberValue,
+				structValue,
+			},
+		};
+	});
+
+export const splitCamelCase = (name: string) =>
+	name.replace(/([a-z])([A-Z])/g, '$1 $2');

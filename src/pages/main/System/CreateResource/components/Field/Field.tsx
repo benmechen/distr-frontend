@@ -2,11 +2,15 @@ import React, { LegacyRef, Ref } from 'react';
 import { UseFormRegisterReturn } from 'react-hook-form';
 import Checkbox from '../../../../../../components/Checkbox/Checkbox';
 import { Input } from '../../../../../../components/Input';
+import { Textarea } from '../../../../../../components/Textarea';
 import {
 	Field as IFieldType,
 	FieldType,
 } from '../../../../../../generated/graphql';
-import { toTitleCase } from '../../../../../../utils/helper.service';
+import {
+	splitCamelCase,
+	toTitleCase,
+} from '../../../../../../utils/helper.service';
 
 interface IField extends IFieldType {
 	className?: string;
@@ -28,12 +32,13 @@ const Field = React.forwardRef<
 		},
 		ref,
 	) => {
+		const placeholder = toTitleCase(splitCamelCase(name));
 		const field = (type: FieldType) => {
 			switch (type) {
 				case FieldType.Boolean:
 					return (
 						<Checkbox
-							label={toTitleCase(name)}
+							label={placeholder}
 							required={required}
 							defaultChecked={
 								defaultValue?.boolValue ?? undefined
@@ -46,7 +51,7 @@ const Field = React.forwardRef<
 				case FieldType.Number:
 					return (
 						<Input
-							placeholder={toTitleCase(name)}
+							placeholder={placeholder}
 							type="number"
 							required={required}
 							defaultValue={
@@ -59,8 +64,8 @@ const Field = React.forwardRef<
 					);
 				case FieldType.Struct:
 					return (
-						<textarea
-							placeholder={toTitleCase(name)}
+						<Textarea
+							placeholder={placeholder}
 							required={required}
 							defaultValue={
 								JSON.stringify(
@@ -72,12 +77,12 @@ const Field = React.forwardRef<
 							{...props}
 							name={name}
 							ref={ref as Ref<HTMLTextAreaElement>}
-						></textarea>
+						/>
 					);
 				case FieldType.String:
 					return (
 						<Input
-							placeholder={toTitleCase(name)}
+							placeholder={placeholder}
 							type="text"
 							required={required}
 							defaultValue={

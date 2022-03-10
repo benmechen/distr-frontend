@@ -4,6 +4,7 @@ import { Input } from '../../../../../components/Input';
 import { LoadingWrapper } from '../../../../../components/LoadingWrapper';
 import { ResourceDetails } from '../../../../../components/ResourceDetails';
 import {
+	Property,
 	UsageType,
 	useGetResourceQuery,
 	useUpdateResourceMutation,
@@ -16,9 +17,14 @@ interface IResourceDetailsData {
 
 interface IResourceDetailsScreen {
 	id: string;
+	details: Property[];
 	next: (id: string) => void;
 }
-const ResourceDetailsScreen = ({ id, next }: IResourceDetailsScreen) => {
+const ResourceDetailsScreen = ({
+	id,
+	details,
+	next,
+}: IResourceDetailsScreen) => {
 	const [{ data, fetching }] = useGetResourceQuery({
 		variables: {
 			id,
@@ -66,6 +72,7 @@ const ResourceDetailsScreen = ({ id, next }: IResourceDetailsScreen) => {
 						{data?.resource && (
 							<ResourceDetails
 								{...data.resource}
+								details={details}
 								usage={
 									data.resource.usage?.type ===
 									UsageType.Limited

@@ -30,9 +30,7 @@ const ResourceDetails = ({
 	<>
 		<p className="font-medium">
 			Status: <StatusIndicator status={status} />
-			<span className="text-lime-500 uppercase font-light ml-1">
-				{status}
-			</span>
+			<span className="text uppercase font-light ml-1">{status}</span>
 		</p>
 		<p className="font-medium mb-2">
 			Usage:{' '}

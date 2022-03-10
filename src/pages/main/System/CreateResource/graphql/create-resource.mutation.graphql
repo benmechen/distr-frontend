@@ -1,5 +1,30 @@
 mutation CreateResource($deploymentID: ID!, $input: ResourceCreateInput!) {
 	resourceCreate(deploymentID: $deploymentID, input: $input) {
-		...SingleResource
+		resource {
+			id
+			name
+			status
+			usage {
+				current
+				limit
+				type
+			}
+
+			deployment {
+				id
+				name
+			}
+			service {
+				...ServiceDetails
+			}
+		}
+		details {
+			name
+			value {
+				stringValue
+				boolValue
+				numberValue
+			}
+		}
 	}
 }
