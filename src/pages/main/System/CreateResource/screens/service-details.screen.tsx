@@ -3,6 +3,7 @@ import { Button } from '../../../../../components/Button';
 import { LoadingWrapper } from '../../../../../components/LoadingWrapper';
 import {
 	Method,
+	Property,
 	useCreateResourceMutation,
 	useGetServiceDetailsQuery,
 	useGetServiceInputsQuery,
@@ -17,7 +18,7 @@ interface IServiceDetailsScreen {
 		name: string;
 	};
 	deploymentId: string;
-	next: (id: string) => void;
+	next: (id: string, details: Property[]) => void;
 }
 const ServiceDetailsScreen = ({
 	service,
@@ -51,8 +52,8 @@ const ServiceDetailsScreen = ({
 			},
 		});
 
-		if (!data?.resourceCreate.id) return;
-		next(data.resourceCreate.id);
+		if (!data?.resourceCreate.resource.id) return;
+		next(data.resourceCreate.resource.id, data.resourceCreate.details);
 	};
 
 	return (

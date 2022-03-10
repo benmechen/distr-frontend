@@ -17,7 +17,7 @@ const ServiceSideBar = ({ id, children }: IServiceSideBar) => {
 
 	if (!data?.service) return <></>;
 	return (
-		<div className="w-full md:w-1/3 bg-white shadow-lg h-screen p-4">
+		<div className="w-full md:w-1/3 bg-white shadow-lg max-h-full min-h-screen overflow-clip p-4">
 			<h2 className="font-bold text-2xl">{data.service.name}</h2>
 			{data.service.verified && <VerifiedBadge />}
 			<p className="mt-6 font-light leading-6">{data.service.summary}</p>

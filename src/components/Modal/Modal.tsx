@@ -16,7 +16,14 @@ const Modal = ({ title, children, open: isOpen, close }: IModal) => {
 					<h2 className="text-xl font-medium">{title}</h2>
 					<Close onClick={close} />
 				</div>
-				<div className="p-4">{children}</div>
+				<div
+					style={{
+						maxHeight: '90vh',
+					}}
+					className="p-4 overflow-y-auto"
+				>
+					{children}
+				</div>
 			</div>
 			<div
 				className="w-screen h-screen bg-black opacity-10"

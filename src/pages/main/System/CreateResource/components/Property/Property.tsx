@@ -4,7 +4,10 @@ import {
 	Property as PropertyType,
 	Value,
 } from '../../../../../../generated/graphql';
-import { toTitleCase } from '../../../../../../utils/helper.service';
+import {
+	splitCamelCase,
+	toTitleCase,
+} from '../../../../../../utils/helper.service';
 
 interface IProperty extends PropertyType {}
 const Property = ({ name, value }: IProperty) => {
@@ -33,7 +36,7 @@ const Property = ({ name, value }: IProperty) => {
 
 	return (
 		<div className="font-medium">
-			{toTitleCase(name)}: {getValue(value)}
+			{toTitleCase(splitCamelCase(name))}: {getValue(value)}
 		</div>
 	);
 };

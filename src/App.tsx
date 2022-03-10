@@ -3,6 +3,8 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import { Provider } from 'urql';
 import { IconContext } from 'phosphor-react';
 import { indigo } from 'tailwindcss/colors';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import { AuthRoute } from './components/AuthRoute';
 import { ProtectedRoute } from './components/ProtectedRoute';
 import { AuthState, ClientService } from './utils/client.service';
@@ -25,15 +27,28 @@ import { DeleteSystemUpdater } from './pages/main/Dashboard/components/SystemCar
 function App() {
 	const client = useMemo(
 		() =>
-			new ClientService(`${import.meta.env.VITE_API_URL}/graphql`, [
-				new CreateServiceUpdater(),
-				new CreateSystemUpdater(),
-				new DeleteSystemUpdater(),
-				new CreateDeploymentUpdater(),
-				new DeleteDeploymentUpdater(),
-				new CreateResourceUpdater(),
-				new DeleteResourceUpdater(),
-			]),
+			new ClientService(
+				`${import.meta.env.VITE_API_URL}/graphql`,
+				[
+					new CreateServiceUpdater(),
+					new CreateSystemUpdater(),
+					new DeleteSystemUpdater(),
+					new CreateDeploymentUpdater(),
+					new DeleteDeploymentUpdater(),
+					new CreateResourceUpdater(),
+					new DeleteResourceUpdater(),
+				],
+				(error) =>
+					toast.error(error.message[0], {
+						position: 'bottom-center',
+						autoClose: 5000,
+						hideProgressBar: false,
+						closeOnClick: true,
+						pauseOnHover: true,
+						draggable: true,
+						progress: undefined,
+					}),
+			),
 		[],
 	);
 	const [isLoggedIn, setLoggedIn] = useState<boolean | null>(null);
@@ -46,6 +61,16 @@ function App() {
 		[client],
 	);
 
+	// toast.error('🦄 Wow so easy!', {
+	// 	position: 'bottom-center',
+	// 	autoClose: 5000,
+	// 	hideProgressBar: false,
+	// 	closeOnClick: true,
+	// 	pauseOnHover: true,
+	// 	draggable: true,
+	// 	progress: undefined,
+	// });
+
 	return (
 		<MainProvider clientService={client}>
 			<IconContext.Provider
@@ -54,6 +79,8 @@ function App() {
 				}}
 			>
 				<Provider value={client.urqlClient}>
+					<ToastContainer />
+
 					<BrowserRouter>
 						<Routes>
 							<Route

@@ -5,7 +5,8 @@ import ServiceDetailsScreen from './screens/service-details.screen';
 import ResourceDetailsScreen from './screens/resource-details.screen';
 import { Navigate, useNavigate, useParams } from 'react-router-dom';
 import { Layout } from '../../Layout';
-import { ServiceRowFragment } from '../../../../generated/graphql';
+import { Property, ServiceRowFragment } from '../../../../generated/graphql';
+import { toast } from 'react-toastify';
 
 const CreateResourceScreen = () => {
 	const navigate = useNavigate();
@@ -14,14 +15,17 @@ const CreateResourceScreen = () => {
 	const [selectedService, setSelectedService] =
 		useState<ServiceRowFragment>();
 	const [createdResourceId, setCreatedResourceId] = useState<string>();
+	const [createdResourceDetails, setCreatedResourceDetails] =
+		useState<Property[]>();
 
 	const onPage1 = (service: ServiceRowFragment) => {
 		setSelectedService(service);
 		setPage((page) => page + 1);
 	};
-	const onPage2 = (resourceId: string) => {
+	const onPage2 = (resourceId: string, details: Property[]) => {
 		console.log(resourceId);
 		setCreatedResourceId(resourceId);
+		setCreatedResourceDetails(details);
 		setPage((page) => page + 1);
 	};
 	const onPage3 = () => navigate(`/system/${systemId}`);
@@ -34,7 +38,7 @@ const CreateResourceScreen = () => {
 			}}
 			onBack={() => navigate(-1)}
 		>
-			<div className="pt-4 max-h-screen overflow-hidden items-center">
+			<div className="pt-4 max-h-screen overflow-y-auto items-center">
 				<PageIndicator page={page} />
 				{page === 0 && <SelectServiceScreen next={onPage1} />}
 				{page === 1 && selectedService && (
@@ -44,9 +48,10 @@ const CreateResourceScreen = () => {
 						next={onPage2}
 					/>
 				)}
-				{page === 2 && createdResourceId && (
+				{page === 2 && createdResourceId && createdResourceDetails && (
 					<ResourceDetailsScreen
 						id={createdResourceId}
+						details={createdResourceDetails}
 						next={onPage3}
 					/>
 				)}

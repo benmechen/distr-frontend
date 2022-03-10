@@ -33,7 +33,11 @@ export class ClientService {
 
 	public state = new BehaviorSubject<AuthState>(AuthState.LOADING);
 
-	constructor(url: string, private updateHandlers: UpdateCacheHandler[]) {
+	constructor(
+		url: string,
+		private updateHandlers: UpdateCacheHandler[],
+		onError?: (error: IError) => void,
+	) {
 		this.client = createClient({
 			url,
 			exchanges: [
@@ -56,7 +60,8 @@ export class ClientService {
 									code: _error.extensions?.code ?? 'UNKNOWN',
 								};
 								console.error(error);
-								// if (error.code !== 'UNAUTHENTICATED') TODO: Add toast or notification of error message
+								if (error.code !== 'UNAUTHENTICATED' && onError)
+									onError(error);
 								return error;
 							});
 						}
