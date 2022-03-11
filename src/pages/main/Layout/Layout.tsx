@@ -15,7 +15,7 @@ interface ILayout {
 }
 const Layout = ({ title, onBack, loading, children }: ILayout) => (
 	<main>
-		<nav className="w-screen p-4 bg-gray-900 text-white fixed flex items-center justify-between">
+		<nav className="w-screen p-4 bg-gray-900 text-white fixed flex items-center justify-between z-10">
 			{onBack ? <Back onBack={onBack} /> : <div></div>}
 			<span className="font-medium text-3xl text-center">
 				{title.main}{' '}

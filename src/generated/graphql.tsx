@@ -454,7 +454,7 @@ export type MutationUserSetTimeoutArgs = {
 
 
 export type MutationUserUpdateArgs = {
-  id: Scalars['String'];
+  id: Scalars['ID'];
   input: UserUpdateInput;
 };
 
@@ -1101,6 +1101,40 @@ export type ServiceRowFragment = (
   & Pick<Service, 'id' | 'name' | 'summary' | 'platform' | 'verified'>
 );
 
+export type GetMeQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetMeQuery = (
+  { __typename?: 'Query' }
+  & { me: (
+    { __typename?: 'User' }
+    & { organisation: (
+      { __typename?: 'Organisation' }
+      & Pick<Organisation, 'id' | 'name'>
+    ) }
+    & UserDetailsFragment
+  ) }
+);
+
+export type UpdateUserMutationVariables = Exact<{
+  id: Scalars['ID'];
+  input: UserUpdateInput;
+}>;
+
+
+export type UpdateUserMutation = (
+  { __typename?: 'Mutation' }
+  & { userUpdate?: Maybe<(
+    { __typename?: 'User' }
+    & UserDetailsFragment
+  )> }
+);
+
+export type UserDetailsFragment = (
+  { __typename?: 'User' }
+  & Pick<User, 'id' | 'name' | 'firstName' | 'lastName' | 'email'>
+);
+
 export type GetServiceQueryVariables = Exact<{
   id: Scalars['ID'];
 }>;
@@ -1388,6 +1422,15 @@ export const ServiceRowFragmentDoc = gql`
   verified
 }
     `;
+export const UserDetailsFragmentDoc = gql`
+    fragment UserDetails on User {
+  id
+  name
+  firstName
+  lastName
+  email
+}
+    `;
 export const SingleServiceFragmentDoc = gql`
     fragment SingleService on Service {
   id
@@ -1579,6 +1622,32 @@ export const SearchServicesDocument = gql`
 
 export function useSearchServicesQuery(options: Omit<Urql.UseQueryArgs<SearchServicesQueryVariables>, 'query'> = {}) {
   return Urql.useQuery<SearchServicesQuery>({ query: SearchServicesDocument, ...options });
+};
+export const GetMeDocument = gql`
+    query GetMe {
+  me {
+    ...UserDetails
+    organisation {
+      id
+      name
+    }
+  }
+}
+    ${UserDetailsFragmentDoc}`;
+
+export function useGetMeQuery(options: Omit<Urql.UseQueryArgs<GetMeQueryVariables>, 'query'> = {}) {
+  return Urql.useQuery<GetMeQuery>({ query: GetMeDocument, ...options });
+};
+export const UpdateUserDocument = gql`
+    mutation UpdateUser($id: ID!, $input: UserUpdateInput!) {
+  userUpdate(id: $id, input: $input) {
+    ...UserDetails
+  }
+}
+    ${UserDetailsFragmentDoc}`;
+
+export function useUpdateUserMutation() {
+  return Urql.useMutation<UpdateUserMutation, UpdateUserMutationVariables>(UpdateUserDocument);
 };
 export const GetServiceDocument = gql`
     query GetService($id: ID!) {

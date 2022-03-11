@@ -1,0 +1,9 @@
+query GetMe {
+	me {
+		...UserDetails
+		organisation {
+			id
+			name
+		}
+	}
+}
