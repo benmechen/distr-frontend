@@ -1,0 +1,9 @@
+fragment SingleOrganisation on Organisation {
+	id
+	name
+	members {
+		id
+		name
+		email
+	}
+}

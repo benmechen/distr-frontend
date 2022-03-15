@@ -261,6 +261,9 @@ export type Mutation = {
   login?: Maybe<Tokens>;
   /** Revoke a refresh token */
   logout?: Maybe<Scalars['String']>;
+  organisationMemberAdd: Organisation;
+  organisationMemberRemove: Organisation;
+  organisationUpdate: Organisation;
   /** Get a new access token from a valid refresh token */
   refresh?: Maybe<Tokens>;
   requestCode: Scalars['Boolean'];
@@ -373,6 +376,24 @@ export type MutationLogoutArgs = {
 };
 
 
+export type MutationOrganisationMemberAddArgs = {
+  input: OrganisationMemberAddInput;
+  organisationID: Scalars['ID'];
+};
+
+
+export type MutationOrganisationMemberRemoveArgs = {
+  memberID: Scalars['ID'];
+  organisationID: Scalars['ID'];
+};
+
+
+export type MutationOrganisationUpdateArgs = {
+  id: Scalars['ID'];
+  input: OrganisationUpdateInput;
+};
+
+
 export type MutationRefreshArgs = {
   token?: Maybe<Scalars['String']>;
 };
@@ -475,10 +496,26 @@ export type Organisation = {
   created: Scalars['DateTime'];
   /** Globally unique identifier */
   id: Scalars['ID'];
+  members: Array<User>;
   /** Organisation's name */
   name: Scalars['String'];
   /** Date the object was last updated */
   updated: Scalars['DateTime'];
+};
+
+export type OrganisationMemberAddInput = {
+  /** User's email. Must be in valid email format. */
+  email: Scalars['String'];
+  /** User's first name. 1-100 characters. */
+  firstName: Scalars['String'];
+  /** User's last name. 1-100 characters. */
+  lastName: Scalars['String'];
+  /** User's password. Min 8 characters */
+  password: Scalars['String'];
+};
+
+export type OrganisationUpdateInput = {
+  name?: Maybe<Scalars['String']>;
 };
 
 export type OtherCredentials = {
@@ -936,8 +973,6 @@ export enum UserRole {
 }
 
 export type UserUpdateInput = {
-  /** User's current password - required to update sensitive fields (email, password) */
-  currentPassword?: Maybe<Scalars['String']>;
   /** User's email. Must be in valid email format. */
   email?: Maybe<Scalars['String']>;
   /** User's first name. 1-100 characters. */
@@ -1133,6 +1168,72 @@ export type UpdateUserMutation = (
 export type UserDetailsFragment = (
   { __typename?: 'User' }
   & Pick<User, 'id' | 'name' | 'firstName' | 'lastName' | 'email'>
+);
+
+export type AddMemberMutationVariables = Exact<{
+  organisationID: Scalars['ID'];
+  input: OrganisationMemberAddInput;
+}>;
+
+
+export type AddMemberMutation = (
+  { __typename?: 'Mutation' }
+  & { organisationMemberAdd: (
+    { __typename?: 'Organisation' }
+    & SingleOrganisationFragment
+  ) }
+);
+
+export type GetOrganisationQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetOrganisationQuery = (
+  { __typename?: 'Query' }
+  & { me: (
+    { __typename?: 'User' }
+    & Pick<User, 'id'>
+    & { organisation: (
+      { __typename?: 'Organisation' }
+      & SingleOrganisationFragment
+    ) }
+  ) }
+);
+
+export type RemoveMemberMutationVariables = Exact<{
+  organisationID: Scalars['ID'];
+  memberID: Scalars['ID'];
+}>;
+
+
+export type RemoveMemberMutation = (
+  { __typename?: 'Mutation' }
+  & { organisationMemberRemove: (
+    { __typename?: 'Organisation' }
+    & SingleOrganisationFragment
+  ) }
+);
+
+export type SingleOrganisationFragment = (
+  { __typename?: 'Organisation' }
+  & Pick<Organisation, 'id' | 'name'>
+  & { members: Array<(
+    { __typename?: 'User' }
+    & Pick<User, 'id' | 'name' | 'email'>
+  )> }
+);
+
+export type UpdateOrganisationMutationVariables = Exact<{
+  id: Scalars['ID'];
+  input: OrganisationUpdateInput;
+}>;
+
+
+export type UpdateOrganisationMutation = (
+  { __typename?: 'Mutation' }
+  & { organisationUpdate: (
+    { __typename?: 'Organisation' }
+    & SingleOrganisationFragment
+  ) }
 );
 
 export type GetServiceQueryVariables = Exact<{
@@ -1431,6 +1532,17 @@ export const UserDetailsFragmentDoc = gql`
   email
 }
     `;
+export const SingleOrganisationFragmentDoc = gql`
+    fragment SingleOrganisation on Organisation {
+  id
+  name
+  members {
+    id
+    name
+    email
+  }
+}
+    `;
 export const SingleServiceFragmentDoc = gql`
     fragment SingleService on Service {
   id
@@ -1648,6 +1760,53 @@ export const UpdateUserDocument = gql`
 
 export function useUpdateUserMutation() {
   return Urql.useMutation<UpdateUserMutation, UpdateUserMutationVariables>(UpdateUserDocument);
+};
+export const AddMemberDocument = gql`
+    mutation AddMember($organisationID: ID!, $input: OrganisationMemberAddInput!) {
+  organisationMemberAdd(organisationID: $organisationID, input: $input) {
+    ...SingleOrganisation
+  }
+}
+    ${SingleOrganisationFragmentDoc}`;
+
+export function useAddMemberMutation() {
+  return Urql.useMutation<AddMemberMutation, AddMemberMutationVariables>(AddMemberDocument);
+};
+export const GetOrganisationDocument = gql`
+    query GetOrganisation {
+  me {
+    id
+    organisation {
+      ...SingleOrganisation
+    }
+  }
+}
+    ${SingleOrganisationFragmentDoc}`;
+
+export function useGetOrganisationQuery(options: Omit<Urql.UseQueryArgs<GetOrganisationQueryVariables>, 'query'> = {}) {
+  return Urql.useQuery<GetOrganisationQuery>({ query: GetOrganisationDocument, ...options });
+};
+export const RemoveMemberDocument = gql`
+    mutation RemoveMember($organisationID: ID!, $memberID: ID!) {
+  organisationMemberRemove(organisationID: $organisationID, memberID: $memberID) {
+    ...SingleOrganisation
+  }
+}
+    ${SingleOrganisationFragmentDoc}`;
+
+export function useRemoveMemberMutation() {
+  return Urql.useMutation<RemoveMemberMutation, RemoveMemberMutationVariables>(RemoveMemberDocument);
+};
+export const UpdateOrganisationDocument = gql`
+    mutation UpdateOrganisation($id: ID!, $input: OrganisationUpdateInput!) {
+  organisationUpdate(id: $id, input: $input) {
+    ...SingleOrganisation
+  }
+}
+    ${SingleOrganisationFragmentDoc}`;
+
+export function useUpdateOrganisationMutation() {
+  return Urql.useMutation<UpdateOrganisationMutation, UpdateOrganisationMutationVariables>(UpdateOrganisationDocument);
 };
 export const GetServiceDocument = gql`
     query GetService($id: ID!) {

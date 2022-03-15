@@ -1,0 +1,8 @@
+mutation RemoveMember($organisationID: ID!, $memberID: ID!) {
+	organisationMemberRemove(
+		organisationID: $organisationID
+		memberID: $memberID
+	) {
+		...SingleOrganisation
+	}
+}
