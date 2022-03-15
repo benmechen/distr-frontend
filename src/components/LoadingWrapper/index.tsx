@@ -1,3 +1,3 @@
-import LoadingWrapper from "./LoadingWrapper"
+import LoadingWrapper from './LoadingWrapper';
 
-export { LoadingWrapper }
+export { LoadingWrapper };

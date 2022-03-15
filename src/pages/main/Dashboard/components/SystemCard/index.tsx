@@ -1,3 +1,3 @@
-import SystemCard from "./SystemCard"
+import SystemCard from './SystemCard';
 
-export { SystemCard }
+export { SystemCard };

@@ -55,6 +55,18 @@ module.exports = {
             },
         ],
         'object-curly-newline': 'off',
+        '@typescript-eslint/no-unnecessary-type-constraint': 'off',
+        'implicit-arrow-linebreak': 'off',
+        'react/react-in-jsx-scope': 'off',
+        'class-methods-use-this': 'off',
+        'react/require-default-props': 'off',
+        'import/no-extraneous-dependencies': 'warn',
+        'react/jsx-props-no-spreading': 'off',
+        'react/button-has-type': 'off',
+        'react/jsx-no-useless-fragment': 'off',
+        'no-nested-ternary': 'off',
+        '@typescript-eslint/no-explicit-any': 'off',
+        'jsx-a11y/no-noninteractive-element-interactions': 'off',
     },
     settings: {
         react: {

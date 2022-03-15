@@ -26,103 +26,105 @@ import { DeleteSystemUpdater } from './pages/main/Dashboard/components/SystemCar
 import AccountSettingsScreen from './pages/main/Settings/AccountSettings/account-settings.screen';
 import OrganisationSettingsScreen from './pages/main/Settings/OrganisationSettings/organisation-settings.screen';
 
-function App() {
-	const client = useMemo(
-		() =>
-			new ClientService(
-				`${import.meta.env.VITE_API_URL}/graphql`,
-				[
-					new CreateServiceUpdater(),
-					new CreateSystemUpdater(),
-					new DeleteSystemUpdater(),
-					new CreateDeploymentUpdater(),
-					new DeleteDeploymentUpdater(),
-					new CreateResourceUpdater(),
-					new DeleteResourceUpdater(),
-				],
-				(error) =>
-					toast.error(error.message[0], {
-						position: 'bottom-center',
-						autoClose: 5000,
-						hideProgressBar: false,
-						closeOnClick: true,
-						pauseOnHover: true,
-						draggable: true,
-						progress: undefined,
-					}),
-			),
-		[],
-	);
-	const [isLoggedIn, setLoggedIn] = useState<boolean | null>(null);
+const App = () => {
+    const client = useMemo(
+        () =>
+            new ClientService(
+                `${import.meta.env.VITE_API_URL}/graphql`,
+                [
+                    new CreateServiceUpdater(),
+                    new CreateSystemUpdater(),
+                    new DeleteSystemUpdater(),
+                    new CreateDeploymentUpdater(),
+                    new DeleteDeploymentUpdater(),
+                    new CreateResourceUpdater(),
+                    new DeleteResourceUpdater(),
+                ],
+                (error) =>
+                    toast.error(error.message[0], {
+                        position: 'bottom-center',
+                        autoClose: 5000,
+                        hideProgressBar: false,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: true,
+                        progress: undefined,
+                    }),
+            ),
+        [],
+    );
+    const [isLoggedIn, setLoggedIn] = useState<boolean | null>(null);
 
-	useMemo(
-		() =>
-			client.state.subscribe((state) =>
-				setLoggedIn(state === AuthState.AUTHENTICATED),
-			),
-		[client],
-	);
+    useMemo(
+        () =>
+            client.state.subscribe((state) =>
+                setLoggedIn(state === AuthState.AUTHENTICATED)),
+        [client],
+    );
 
-	return (
-		<MainProvider clientService={client}>
-			<IconContext.Provider
-				value={{
-					color: indigo[500],
-				}}
-			>
-				<Provider value={client.urqlClient}>
-					<ToastContainer />
+    const iconColour = useMemo(
+        () => ({
+            color: indigo[500],
+        }),
+        [],
+    );
 
-					<BrowserRouter>
-						<Routes>
-							<Route
-								path="/auth"
-								element={<AuthRoute isLoggedIn={isLoggedIn} />}
-							>
-								<Route
-									path="welcome"
-									element={<WelcomeScreen />}
-								/>
-								<Route path="login" element={<LoginScreen />} />
-							</Route>
-							<Route
-								path="/"
-								element={
-									<ProtectedRoute isLoggedIn={isLoggedIn} />
-								}
-							>
-								<Route
-									path="system/:id"
-									element={<SystemScreen />}
-								/>
-								<Route
-									path="system/:systemId/:deploymentId/resource/new"
-									element={<CreateResourceScreen />}
-								/>
-								<Route
-									path="system/:systemId/:deploymentId/resource/:resourceId"
-									element={<ResourceScreen />}
-								/>
-								<Route
-									path="marketplace"
-									element={<MarketplaceScreen />}
-								/>
-								<Route
-									path="settings/account"
-									element={<AccountSettingsScreen />}
-								/>
-								<Route
-									path="settings/organisation"
-									element={<OrganisationSettingsScreen />}
-								/>
-								<Route index element={<DashboardScreen />} />
-							</Route>
-						</Routes>
-					</BrowserRouter>
-				</Provider>
-			</IconContext.Provider>
-		</MainProvider>
-	);
-}
+    return (
+        <MainProvider clientService={client}>
+            <IconContext.Provider value={iconColour}>
+                <Provider value={client.urqlClient}>
+                    <ToastContainer />
+
+                    <BrowserRouter>
+                        <Routes>
+                            <Route
+                                path="/auth"
+                                element={<AuthRoute isLoggedIn={isLoggedIn} />}
+                            >
+                                <Route
+                                    path="welcome"
+                                    element={<WelcomeScreen />}
+                                />
+                                <Route path="login" element={<LoginScreen />} />
+                            </Route>
+                            <Route
+                                path="/"
+                                element={
+                                    <ProtectedRoute isLoggedIn={isLoggedIn} />
+                                }
+                            >
+                                <Route
+                                    path="system/:id"
+                                    element={<SystemScreen />}
+                                />
+                                <Route
+                                    path="system/:systemId/:deploymentId/resource/new"
+                                    element={<CreateResourceScreen />}
+                                />
+                                <Route
+                                    path="system/:systemId/:deploymentId/resource/:resourceId"
+                                    element={<ResourceScreen />}
+                                />
+                                <Route
+                                    path="marketplace"
+                                    element={<MarketplaceScreen />}
+                                />
+                                <Route
+                                    path="settings/account"
+                                    element={<AccountSettingsScreen />}
+                                />
+                                <Route
+                                    path="settings/organisation"
+                                    element={<OrganisationSettingsScreen />}
+                                />
+                                <Route index element={<DashboardScreen />} />
+                            </Route>
+                        </Routes>
+                    </BrowserRouter>
+                </Provider>
+            </IconContext.Provider>
+        </MainProvider>
+    );
+};
 
 export default App;

@@ -1,3 +1,3 @@
-import Emphasis from "./Emphasis"
+import Emphasis from './Emphasis';
 
-export { Emphasis }
+export { Emphasis };

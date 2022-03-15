@@ -1,7 +1,7 @@
-import React from "react"
+import React from 'react';
 
 interface IButton extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-    children: string
+    children: string;
 }
 
 const Button = ({ children, className, ...props }: IButton) => (
@@ -11,5 +11,5 @@ const Button = ({ children, className, ...props }: IButton) => (
     >
         {children}
     </button>
-)
-export default Button
+);
+export default Button;

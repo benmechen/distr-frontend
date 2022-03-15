@@ -1,28 +1,27 @@
-import { Cache, ResolveInfo } from '@urql/exchange-graphcache';
+import { Cache } from '@urql/exchange-graphcache';
 import {
-	DeleteResourceMutation,
-	DeleteResourceMutationVariables,
-	Exact,
+    DeleteResourceMutation,
+    DeleteResourceMutationVariables,
+    Exact,
 } from '../../../../../generated/graphql';
 import { UpdateCacheHandler } from '../../../../../utils/update.helper';
 
 export class DeleteResourceUpdater extends UpdateCacheHandler<
-	DeleteResourceMutation,
-	DeleteResourceMutationVariables
+    DeleteResourceMutation,
+    DeleteResourceMutationVariables
 > {
-	constructor() {
-		super('resourceDelete');
-	}
+    constructor() {
+        super('resourceDelete');
+    }
 
-	protected handler(
-		parent: DeleteResourceMutation,
-		args: Exact<{ id: string }>,
-		cache: Cache,
-		info: ResolveInfo,
-	): void {
-		cache.invalidate({
-			__typename: 'Resource',
-			id: args.id,
-		});
-	}
+    protected handler(
+        _: DeleteResourceMutation,
+        args: Exact<{ id: string }>,
+        cache: Cache,
+    ): void {
+        cache.invalidate({
+            __typename: 'Resource',
+            id: args.id,
+        });
+    }
 }

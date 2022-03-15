@@ -1,5 +1,5 @@
 import RenameResourceForm, {
-	IRenameResourceFormData,
+    IRenameResourceFormData,
 } from './RenameResourceForm';
 
 export { RenameResourceForm };

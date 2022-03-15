@@ -3,39 +3,39 @@ import { Button, TertiaryButton } from '../../../../../../../components/Button';
 import { Input } from '../../../../../../../components/Input';
 
 export interface IUpdateSystemFormData {
-	name: string;
+    name: string;
 }
 
 interface IUpdateSystemForm {
-	name?: string;
-	onSubmit: SubmitHandler<IUpdateSystemFormData>;
-	onDeleteClick?: () => void;
+    name?: string;
+    onSubmit: SubmitHandler<IUpdateSystemFormData>;
+    onDeleteClick?: () => void;
 }
 
 const UpdateSystemForm = ({
-	name,
-	onSubmit,
-	onDeleteClick,
+    name,
+    onSubmit,
+    onDeleteClick,
 }: IUpdateSystemForm) => {
-	const { handleSubmit, register } = useForm<IUpdateSystemFormData>({
-		defaultValues: {
-			name,
-		},
-	});
+    const { handleSubmit, register } = useForm<IUpdateSystemFormData>({
+        defaultValues: {
+            name,
+        },
+    });
 
-	return (
-		<form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
-			<Input
-				placeholder="Name"
-				{...register('name', { required: true })}
-			/>
-			<Button>Save Changes</Button>
-			{onDeleteClick && (
-				<TertiaryButton className="mt-2" onClick={onDeleteClick}>
-					Delete System
-				</TertiaryButton>
-			)}
-		</form>
-	);
+    return (
+        <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
+            <Input
+                placeholder="Name"
+                {...register('name', { required: true })}
+            />
+            <Button>Save Changes</Button>
+            {onDeleteClick && (
+                <TertiaryButton className="mt-2" onClick={onDeleteClick}>
+                    Delete System
+                </TertiaryButton>
+            )}
+        </form>
+    );
 };
 export default UpdateSystemForm;

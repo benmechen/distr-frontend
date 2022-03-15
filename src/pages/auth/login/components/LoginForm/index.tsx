@@ -1,4 +1,4 @@
-import LoginForm, { ILoginFormData } from "./LoginForm"
+import LoginForm, { ILoginFormData } from './LoginForm';
 
-export { LoginForm }
-export type { ILoginFormData }
+export { LoginForm };
+export type { ILoginFormData };

@@ -1,3 +1,3 @@
-import CreateSystemCard from "./CreateSystemCard"
+import CreateSystemCard from './CreateSystemCard';
 
-export { CreateSystemCard }
+export { CreateSystemCard };

@@ -1,23 +1,23 @@
-import { SubmitHandler, useForm } from "react-hook-form"
-import { Button } from "../../../../../components/Button"
-import { Input } from "../../../../../components/Input"
+import { SubmitHandler, useForm } from 'react-hook-form';
+import { Button } from '../../../../../components/Button';
+import { Input } from '../../../../../components/Input';
 
 export interface ILoginFormData {
-    email: string
-    password: string
+    email: string;
+    password: string;
 }
 
 interface ILoginForm {
-    email?: string
-    onSubmit: SubmitHandler<ILoginFormData>
+    email?: string;
+    onSubmit: SubmitHandler<ILoginFormData>;
 }
 
 const LoginForm = ({ email, onSubmit }: ILoginForm) => {
     const { handleSubmit, register } = useForm<ILoginFormData>({
         defaultValues: {
-            email
-        }
-    })
+            email,
+        },
+    });
     return (
         <form
             onSubmit={handleSubmit(onSubmit)}
@@ -26,15 +26,15 @@ const LoginForm = ({ email, onSubmit }: ILoginForm) => {
             <Input
                 placeholder="Email"
                 disabled={!!email}
-                {...register("email", { required: true })}
+                {...register('email', { required: true })}
             />
             <Input
                 placeholder="Password"
                 type="password"
-                {...register("password", { required: true })}
+                {...register('password', { required: true })}
             />
             <Button type="submit">Log In</Button>
         </form>
-    )
-}
-export default LoginForm
+    );
+};
+export default LoginForm;

@@ -1,17 +1,17 @@
-import { SubmitHandler, useForm } from "react-hook-form"
-import { Button } from "../../../../../components/Button"
-import { Input } from "../../../../../components/Input"
+import { SubmitHandler, useForm } from 'react-hook-form';
+import { Button } from '../../../../../components/Button';
+import { Input } from '../../../../../components/Input';
 
 export interface IWelcomeFormData {
-    email: string
+    email: string;
 }
 
 interface IWelcomeForm {
-    onSubmit: SubmitHandler<IWelcomeFormData>
+    onSubmit: SubmitHandler<IWelcomeFormData>;
 }
 
 const WelcomeForm = ({ onSubmit }: IWelcomeForm) => {
-    const { handleSubmit, register } = useForm<IWelcomeFormData>()
+    const { handleSubmit, register } = useForm<IWelcomeFormData>();
     return (
         <form
             onSubmit={handleSubmit(onSubmit)}
@@ -19,10 +19,10 @@ const WelcomeForm = ({ onSubmit }: IWelcomeForm) => {
         >
             <Input
                 placeholder="Email"
-                {...register("email", { required: true })}
+                {...register('email', { required: true })}
             />
             <Button type="submit">Continue</Button>
         </form>
-    )
-}
-export default WelcomeForm
+    );
+};
+export default WelcomeForm;
