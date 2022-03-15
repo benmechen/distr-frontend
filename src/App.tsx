@@ -23,6 +23,8 @@ import { DeleteDeploymentUpdater } from './pages/main/System/components/Deployme
 import { CreateDeploymentUpdater } from './pages/main/System/components/CreateDeploymentButton/graphql/create-deployment.updater';
 import { CreateSystemUpdater } from './pages/main/Dashboard/graphql/create-system.updater';
 import { DeleteSystemUpdater } from './pages/main/Dashboard/components/SystemCard/graphql/delete-system.updater';
+import AccountSettingsScreen from './pages/main/Settings/AccountSettings/account-settings.screen';
+import OrganisationSettingsScreen from './pages/main/Settings/OrganisationSettings/organisation-settings.screen';
 
 function App() {
 	const client = useMemo(
@@ -60,16 +62,6 @@ function App() {
 			),
 		[client],
 	);
-
-	// toast.error('🦄 Wow so easy!', {
-	// 	position: 'bottom-center',
-	// 	autoClose: 5000,
-	// 	hideProgressBar: false,
-	// 	closeOnClick: true,
-	// 	pauseOnHover: true,
-	// 	draggable: true,
-	// 	progress: undefined,
-	// });
 
 	return (
 		<MainProvider clientService={client}>
@@ -114,6 +106,14 @@ function App() {
 								<Route
 									path="marketplace"
 									element={<MarketplaceScreen />}
+								/>
+								<Route
+									path="settings/account"
+									element={<AccountSettingsScreen />}
+								/>
+								<Route
+									path="settings/organisation"
+									element={<OrganisationSettingsScreen />}
 								/>
 								<Route index element={<DashboardScreen />} />
 							</Route>

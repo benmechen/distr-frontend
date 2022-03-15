@@ -1,0 +1,5 @@
+mutation AddMember($organisationID: ID!, $input: OrganisationMemberAddInput!) {
+	organisationMemberAdd(organisationID: $organisationID, input: $input) {
+		...SingleOrganisation
+	}
+}

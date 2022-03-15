@@ -43,3 +43,19 @@ export const transformInputs = (data: Record<string, any>): Input[] =>
 
 export const splitCamelCase = (name: string) =>
 	name.replace(/([a-z])([A-Z])/g, '$1 $2');
+
+export const diff = <
+	F extends Record<string, any>,
+	T extends Record<string, any>,
+>(
+	from: F,
+	to: T,
+) => {
+	const diff: Partial<F & T> = {};
+
+	Object.entries(from).map(([key, value]) => {
+		if (to[key] !== value) diff[key as keyof Partial<F & T>] = value;
+	});
+
+	return diff;
+};

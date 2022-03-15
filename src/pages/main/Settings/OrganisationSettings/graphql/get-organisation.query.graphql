@@ -1,0 +1,8 @@
+query GetOrganisation {
+	me {
+		id
+		organisation {
+			...SingleOrganisation
+		}
+	}
+}
