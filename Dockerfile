@@ -11,7 +11,7 @@ FROM node:lts-alpine as starter
 WORKDIR /usr/app
 COPY --from=builder /usr/app/ ./
 
-RUN npm install -g http-server
+RUN npm install -g serve
 
-EXPOSE 8080
-CMD ["http-server", "dist", "-s"]
+EXPOSE 3000
+CMD serve dist -p 3000
